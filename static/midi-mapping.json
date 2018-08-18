@@ -1,0 +1,341 @@
+{
+  "40": {
+    "on": {
+      "command": "restartAnimation",
+      "targets": "randomSide",
+      "payload": {
+        "index": 0
+      }
+    }
+  },
+  "41": {
+    "on": {
+      "command": "restartAnimation",
+      "targets": "randomSide",
+      "payload": {
+        "index": 1
+      }
+    }
+  },
+  "42": {
+    "on": {
+      "command": "restartAnimation",
+      "targets": "randomSide",
+      "payload": {
+        "index": 2
+      }
+    }
+  },
+  "43": {
+    "on": {
+      "command": "restartAnimation",
+      "targets": "randomSide",
+      "payload": {
+        "index": 3
+      }
+    }
+  },
+  "44": {
+    "on": {
+      "command": "restartAnimation",
+      "targets": "randomSide",
+      "payload": {
+        "index": 4
+      }
+    }
+  },
+  "45": {
+    "on": {
+      "command": "restartAnimation",
+      "targets": "randomSide",
+      "payload": {
+        "index": 5
+      }
+    }
+  },
+  "46": {
+    "on": {
+      "command": "restartAnimation",
+      "targets": "randomSide",
+      "payload": {
+        "index": 6
+      }
+    }
+  },
+  "47": {
+    "on": {
+      "command": "flashOn",
+      "targets": "randomSide"
+    },
+    "off": {
+      "command": "flashOff"
+    }
+  },
+  "48": {
+    "value": {
+      "command": "setParameters",
+      "property": "primary",
+      "payload": {
+        "index": 0
+      }
+    },
+    "on": {
+      "command": "restartAnimation",
+      "targets": "one",
+      "payload": {
+        "index": 0
+      }
+    }
+  },
+  "49": {
+    "value": {
+      "command": "setParameters",
+      "property": "primary",
+      "payload": {
+        "index": 1
+      }
+    },
+    "on": {
+      "command": "restartAnimation",
+      "targets": "one",
+      "payload": {
+        "index": 1
+      }
+    }
+  },
+  "50": {
+    "value": {
+      "command": "setParameters",
+      "property": "primary",
+      "payload": {
+        "index": 2
+      }
+    },
+    "on": {
+      "command": "restartAnimation",
+      "targets": "one",
+      "payload": {
+        "index": 2
+      }
+    }
+  },
+  "51": {
+    "value": {
+      "command": "setParameters",
+      "property": "primary",
+      "payload": {
+        "index": 3
+      }
+    },
+    "on": {
+      "command": "restartAnimation",
+      "targets": "one",
+      "payload": {
+        "index": 3
+      }
+    }
+  },
+  "52": {
+    "value": {
+      "command": "setParameters",
+      "property": "primary",
+      "payload": {
+        "index": 4
+      }
+    },
+    "on": {
+      "command": "restartAnimation",
+      "targets": "one",
+      "payload": {
+        "index": 4
+      }
+    }
+  },
+  "53": {
+    "value": {
+      "command": "setParameters",
+      "property": "primary",
+      "payload": {
+        "index": 5
+      }
+    },
+    "on": {
+      "command": "restartAnimation",
+      "targets": "one",
+      "payload": {
+        "index": 5
+      }
+    }
+  },
+  "54": {
+    "value": {
+      "command": "setParameters",
+      "property": "primary",
+      "payload": {
+        "index": 6
+      }
+    },
+    "on": {
+      "command": "restartAnimation",
+      "targets": "one",
+      "payload": {
+        "index": 6
+      }
+    }
+  },
+  "55": {
+    "value": {
+      "command": "setParameters",
+      "property": "primary",
+      "payload": {
+        "index": "flashLayer"
+      }
+    },
+    "on": {
+      "command": "flashOn",
+      "targets": "one"
+    },
+    "off": {
+      "command": "flashOff"
+    }
+  },
+  "56": {
+    "on": {
+      "command": "restartAnimation",
+      "payload": {
+        "index": 0
+      }
+    }
+  },
+  "57": {
+    "on": {
+      "command": "restartAnimation",
+      "payload": {
+        "index": 1
+      }
+    }
+  },
+  "58": {
+    "on": {
+      "command": "restartAnimation",
+      "payload": {
+        "index": 2
+      }
+    }
+  },
+  "59": {
+    "on": {
+      "command": "restartAnimation",
+      "payload": {
+        "index": 3
+      }
+    }
+  },
+  "60": {
+    "on": {
+      "command": "restartAnimation",
+      "payload": {
+        "index": 4
+      }
+    }
+  },
+  "61": {
+    "on": {
+      "command": "restartAnimation",
+      "payload": {
+        "index": 5
+      }
+    }
+  },
+  "62": {
+    "on": {
+      "command": "restartAnimation",
+      "payload": {
+        "index": 6
+      }
+    }
+  },
+  "63": {
+    "on": {
+      "command": "flashOn"
+    },
+    "off": {
+      "command": "flashOff"
+    }
+  },
+
+  "64": {
+    "on": {
+      "command": "toggleIsEnabled",
+      "payload": {
+        "index": 0
+      }
+    }
+  },
+  "65": {
+    "on": {
+      "command": "toggleIsEnabled",
+      "payload": {
+        "index": 1
+      }
+    }
+  },
+  "66": {
+    "on": {
+      "command": "toggleIsEnabled",
+      "payload": {
+        "index": 2
+      }
+    }
+  },
+  "67": {
+    "on": {
+      "command": "toggleIsEnabled",
+      "payload": {
+        "index": 3
+      }
+    }
+  },
+  "68": {
+    "on": {
+      "command": "toggleIsEnabled",
+      "payload": {
+        "index": 4
+      }
+    }
+  },
+  "69": {
+    "on": {
+      "command": "toggleIsEnabled",
+      "payload": {
+        "index": 5
+      }
+    }
+  },
+  "70": {
+    "on": {
+      "command": "toggleIsEnabled",
+      "payload": {
+        "index": 6
+      }
+    }
+  },
+  "88": {
+    "on": {
+      "command": "enableAll"
+    }
+  },
+  "89": {
+    "on": {
+      "command": "disableAll"
+    }
+  },
+  "98": {
+    "on": {
+      "command": "blackOutOn"
+    },
+    "off": {
+      "command": "blackOutOff"
+    }
+  }
+}

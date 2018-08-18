@@ -1,0 +1,27 @@
+<html>
+<head>
+  <title>Control page</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="control.css" type="text/css" />
+</head>
+<body>
+  <div class="actions">
+    <button data-action="refresh">refresh clients</button>
+    <button data-action="setAllLayers">set all layers</button>
+    <div class="statuses">
+      <div data-selector="clientStatus" class="client-status"></div>
+      <div data-selector="beatStatus" class="beat-status">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <button data-action="fullScreen" class="full-screen-button" data-toggled-text="go windowed">go fullScreen</button>
+  </div>
+  <section data-container="layers" class="layers"></section>
+  <section class="preview-channels"></section>
+  <section class="explorer"></section>
+</body>
+<script type="module" src="control/index.mjs"></script>
+</html>

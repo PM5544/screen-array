@@ -1,0 +1,41 @@
+<html>
+<head>
+  <script>
+    window.onerror = (message, source, lineno, colno, error = {}) => {
+      const { stack } = error;
+
+      fetch('/errors', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message, source, lineno, colno, error, stack })
+      });
+      return true;
+    }
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    html {
+      background: black;
+      font-family: sans-serif;
+      /* cursor: none; */
+    }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+</body>
+<script>
+  let levels = [];
+</script>
+<script type="module" src="client/index.mjs"></script>
+</html>

@@ -1,0 +1,35 @@
+<html>
+<head>
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    html {
+      background: black;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+</body>
+<script type="module">
+  import Animation from '/animations/Landscape.mjs';
+  import { clear, ctx, properties } from '../client/canvas.mjs';
+
+  const animation = new Animation({});
+
+  function drawFrame() {
+    clear();
+    animation.render(ctx, properties);
+    window.requestAnimationFrame(drawFrame);
+  }
+
+  window.requestAnimationFrame(drawFrame);
+
+</script>
+</html>
