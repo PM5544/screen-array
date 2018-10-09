@@ -1,10 +1,12 @@
-const { io, controlServer, clientsServer } = require('./io');
-const registeredSockets = require('./registeredSockets');
-const server = require('./server');
-const sendToSockets = require('./sendToSockets');
-const getAllAnimationsPaths = require('./getAllAnimationsPaths');
+import { IO, controlServer, clientsServer } from './io';
+import * as registeredSockets from './registeredSockets';
+import server from './server';
+import sendToSockets from './sendToSockets';
+import getAllAnimationsPaths from './getAllAnimationsPaths';
 
-io.attach(server);
+IO.attach(server, {
+  transports: ['websocket']
+});
 
 controlServer.on('connection', function(co) {
   [
@@ -89,12 +91,12 @@ clientsServer.on('reconnect', function(cl) {
 });
 
 // // Create a new instance of node-core-audio
-// var readAudio = require('read-audio');
+// var readAudio from 'read-audio');
 
-// var pull = require('pull-stream');
-// // var terminalBar = require('terminal-bar');
-// var ft = require('fourier-transform');
-// var db = require('decibels');
+// var pull from 'pull-stream');
+// // var terminalBar from 'terminal-bar');
+// var ft from 'fourier-transform');
+// var db from 'decibels');
 
 // var audio = readAudio({
 //   buffer: 1024,

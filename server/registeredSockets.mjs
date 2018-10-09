@@ -1,13 +1,13 @@
-const { CLIENT_COUNT } = require('./config');
+import { CLIENT_COUNT } from './constants';
 
-const sockets = new Map();
-let socketValues = [];
-let socketsRightValues = [];
-let socketsLeftValues = [];
+export const sockets = new Map();
+export let socketValues = [];
+export let socketsRightValues = [];
+export let socketsLeftValues = [];
 
 const sides = ['left', 'right'];
 
-function reset() {
+export function reset() {
   socketsRightValues.length = 0;
   socketsLeftValues.length = 0;
 }
@@ -16,7 +16,7 @@ function getRandomFromArray(ar) {
   return ar[Math.floor(Math.random() * ar.length)];
 }
 
-function set(socketNumber, socketId) {
+export function set(socketNumber, socketId) {
   console.log('sockets', socketNumber, 'set', sockets.size);
   if (!socketNumber) {
     return;
@@ -51,15 +51,15 @@ function set(socketNumber, socketId) {
   }
 }
 
-function one(socketNumber) {
+export function one(socketNumber) {
   return sockets.get(socketNumber);
 }
 
-function random() {
+export function random() {
   return getRandomFromArray(socketValues);
 }
 
-function randomFromSide(side = 'right') {
+export function randomFromSide(side = 'right') {
   if ('right' === side) {
     return getRandomFromArray(socketsRightValues);
   } else {
@@ -67,7 +67,7 @@ function randomFromSide(side = 'right') {
   }
 }
 
-function side(side = 'right') {
+export function side(side = 'right') {
   if ('right' === side) {
     return socketsRightValues;
   } else {
@@ -75,19 +75,19 @@ function side(side = 'right') {
   }
 }
 
-function randomSide() {
+export function randomSide() {
   return side(getRandomFromArray(sides));
 }
 
-module.exports = {
-  one,
-  random,
-  randomFromSide,
-  randomSide,
-  reset,
-  set,
-  side,
-  sockets,
-  socketsLeftValues,
-  socketsRightValues
-};
+// export default {
+//   one,
+//   random,
+//   randomFromSide,
+//   randomSide,
+//   reset,
+//   set,
+//   side,
+//   sockets,
+//   socketsLeftValues,
+//   socketsRightValues
+// };

@@ -1,7 +1,7 @@
-const registeredSockets = require('./registeredSockets');
-const { io, clientsServer } = require('./io');
+import * as registeredSockets from './registeredSockets';
+import { IO, clientsServer } from './io';
 
-module.exports = function(
+export default function(
   type,
   { to = 'clients', targets, id, data = {} } = {}
 ) {
@@ -38,6 +38,6 @@ module.exports = function(
       break;
 
     default:
-      io.of(to).emit(type, data);
+      IO.of(to).emit(type, data);
   }
 };

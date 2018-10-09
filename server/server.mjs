@@ -1,11 +1,10 @@
-const http = require('http');
-const { controlServer } = require('./io');
-const { readFile } = require('fs');
-const url = require('url');
-const { join } = require('path');
-const dir = __dirname;
+import http from 'http';
+import { controlServer } from './io';
+import { readFile } from 'fs';
+import url from 'url';
+import { join } from 'path';
 
-module.exports = http.createServer(function(request, response) {
+export default http.createServer(function(request, response) {
   const { pathname } = url.parse(request.url);
 
   if (pathname.includes('/errors') && request.method === 'POST') {
@@ -20,7 +19,8 @@ module.exports = http.createServer(function(request, response) {
     });
     return;
   }
-  readFile(join(dir, '..', 'static', pathname), (error, data) => {
+
+  readFile(join('static', pathname), (error, data) => {
     if (error) {
       response.writeHead(404);
     } else {

@@ -2,9 +2,9 @@
   "name": "screen-array",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./server/index.mjs",
   "scripts": {
-    "start": "nodemon server/index.js"
+    "start": "nodemon --experimental-modules server/index.mjs"
   },
   "repository": {
     "type": "git",
@@ -17,13 +17,13 @@
   },
   "homepage": "https://github.com/PM5544/screen-array#readme",
   "dependencies": {
-    "nodemon": "^1.18.3",
-    "socket.io": "^2.1.0",
+    "nodemon": "^1.18.4",
+    "socket.io": "^2.1.1",
     "ssh2": "^0.6.1"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
-    "prettier": "^1.14.2",
-    "eslint-config-prettier": "^2.9.0"
+    "eslint-config-prettier": "^2.10.0",
+    "prettier": "^1.14.3"
   }
 }
