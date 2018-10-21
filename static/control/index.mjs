@@ -27,7 +27,7 @@ window.onunload = () => {
   let controlParameters = localStorage.getItem('controlParameters');
   if (controlParameters) {
     controlParameters = JSON.parse(controlParameters);
-    console.log(controlParameters);
+    // console.log(controlParameters);
     setControlParameters(controlParameters);
     localStorage.removeItem('controlParameters');
   }

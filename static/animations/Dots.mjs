@@ -11,7 +11,7 @@ class Dot {
     const rand = Math.random();
     this.radius = 15 + rand * 25;
     this.sizeStep = 0.01 + rand * 0.07;
-    this.opacity = 0.4 + rand * 0.6;
+    // this.opacity = 0.4 + rand * 0.6;
     this.r = r;
     this.g = g;
     this.b = b;
@@ -20,16 +20,16 @@ class Dot {
   }
 
   render(ctx) {
-    const { radius, opacity } = this;
-    if (opacity <= 0) {
+    const { radius } = this;
+    if (radius <= 3) {
       this.done = true;
     } else {
-      ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${opacity})`;
+      ctx.fillStyle = `rgb(${this.r}, ${this.g}, ${this.b})`;
       ctx.beginPath();
       ctx.arc(this.x, this.y, radius, 0, end);
       ctx.fill();
-      this.radius -= this.sizeStep * 5;
-      this.opacity -= this.sizeStep;
+      this.radius -= this.sizeStep * 10;
+      // this.opacity -= this.sizeStep;
     }
   }
 }

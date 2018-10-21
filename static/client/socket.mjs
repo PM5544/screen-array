@@ -1,6 +1,9 @@
 /* globals io */
 import * as layers from './layers.mjs';
+import { setAudioLevels } from './draw.mjs';
 import { overlay, reload } from './dom.mjs';
+
+io({ transports: ['websocket'] });
 
 export const clients = io('/clients');
 
@@ -18,7 +21,7 @@ clients.on('refresh', function() {
   'enableAll',
   'flashOn',
   'flashOff',
-  'loadAnimation',
+
   'restartAnimation',
   'setClientPosition',
   'setControlParameters'
@@ -27,20 +30,34 @@ clients.on('refresh', function() {
     layers[type](args);
   });
 });
-
-clients.on('setParameters', args => {
-  const {
-    parameters: { color }
-  } = args;
-  if (color) {
-    const r = parseInt(color.substr(1, 2), 16);
-    const g = parseInt(color.substr(3, 2), 16);
-    const b = parseInt(color.substr(5, 2), 16);
-    delete args.parameters.color;
-    Object.assign(args.parameters, { r, g, b });
-  }
-  layers.setParameters(args);
+['loadAnimation', 'setParameters'].forEach(type => {
+  clients.on(type, args => {
+    const {
+      parameters: { color }
+    } = args;
+    if (color) {
+      const r = parseInt(color.substr(1, 2), 16);
+      const g = parseInt(color.substr(3, 2), 16);
+      const b = parseInt(color.substr(5, 2), 16);
+      delete args.parameters.color;
+      Object.assign(args.parameters, { r, g, b });
+    }
+    layers[type](args);
+  });
 });
+// clients.on(, args => {
+//   const {
+//     parameters: { color }
+//   } = args;
+//   if (color) {
+//     const r = parseInt(color.substr(1, 2), 16);
+//     const g = parseInt(color.substr(3, 2), 16);
+//     const b = parseInt(color.substr(5, 2), 16);
+//     delete args.parameters.color;
+//     Object.assign(args.parameters, { r, g, b });
+//   }
+//   layers.setParameters(args);
+// });
 
 const socketNumber = localStorage.getItem('socketNumber');
 clients.on('getSocketNumber', () => {
@@ -58,7 +75,6 @@ clients.on('identify', function(data) {
   overlay(data.id);
 });
 
-// clients.on('data', function(data) {
-//   const now = new Date();
-//   levels = data.data;
-// });
+clients.on('levels', function(data) {
+  setAudioLevels(data);
+});

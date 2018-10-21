@@ -1,8 +1,7 @@
 /* globals io */
-import { get } from './control/dom.js';
-
-var socket = io('/control');
-const clientsNode = get('.clients');
+io({ transports: ['websocket'] });
+const socket = io('/control');
+const clientsNode = document.querySelector('.clients');
 
 socket.on('allClientIds', function(data) {
   const html = data.clientIds
@@ -31,7 +30,7 @@ clientsNode.addEventListener('click', ({ target }) => {
     case 'BUTTON':
       console.log('button');
       {
-        const socketNumber = get('input', target.parentNode).value;
+        const socketNumber = target.parentNode.querySelector('input').value;
         const { id } = target.dataset;
         if (socketNumber) {
           console.log('emitted', socketNumber);

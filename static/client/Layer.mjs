@@ -13,11 +13,11 @@ export default class Layer {
   }
 
   setParameters(parameters) {
-    console.log(parameters);
+    // console.log(parameters);
     if (parameters && this.animation) {
       for (let key in parameters) {
         const priorValue = this.animation[key];
-        console.log(priorValue);
+        // console.log(priorValue);
         if ('number' === typeof priorValue) {
           this.animation[key] = Number(parameters[key]);
         }
@@ -26,15 +26,15 @@ export default class Layer {
   }
 
   load(args) {
-    const { moduleString, parameters } = args;
+    const { moduleId, parameters } = args;
 
-    if (moduleString) {
-      // when Chromium gets dynamic module loading this can be replaced by an import()
-      const evaluated = new Function(moduleString)();
-      this.animation = new evaluated(this.clientPosition);
+    if (moduleId) {
       this.disable();
+      import(moduleId).then(mod => {
+        this.animation = new mod.default(this.clientPosition);
+        this.setParameters(parameters);
+      });
     }
-    this.setParameters(parameters);
   }
 
   setAnimation(Animation, overrideDisable = false) {
@@ -74,9 +74,9 @@ export default class Layer {
     this.clientPosition = args;
   }
 
-  render(ctx, screen) {
+  render(ctx, screen, levels) {
     if (this.isEnabled && this.animation) {
-      this.animation.render(ctx, screen);
+      this.animation.render(ctx, screen, levels);
     }
   }
 }

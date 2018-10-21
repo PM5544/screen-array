@@ -6,7 +6,7 @@ const clientStatus = dom.qSelect('[data-selector=clientStatus]');
 clientStatus.addEventListener('click', ({ target }) => {
   const { id } = target.dataset;
   if (id) {
-    control.emit('identify', { targets: 'byId', id, data: { id } });
+    control.emit('identify', { targets: 'byId', id, data: { id: id.replace('/clients#', '') } });
   }
 });
 

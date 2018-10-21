@@ -75,6 +75,9 @@ export default class Layer {
     this.formNode.addEventListener('submit', e => {
       e.preventDefault();
 
+      const { justLoadAnyway } = this;
+      delete this.justLoadAnyway;
+
       const values = dom.getFormValues(e.target);
       // console.log(values);
 
@@ -88,29 +91,13 @@ export default class Layer {
         events.trigger('clearLayer', { data: { index: this.index } });
         events.trigger('disableLayerToggle', { data: { index: this.index } });
         this.moduleId = null;
-      } else if (moduleId && moduleId !== this.moduleId) {
+      } else if ((moduleId && moduleId !== this.moduleId) || justLoadAnyway) {
         this.moduleId = moduleId;
         events.trigger('enableLayerToggle', { data: { index: this.index } });
 
         if (!this.preSelectedValues) {
           this.preSelectedValues = values;
         }
-
-        // when Chromium for Raspian gets support for dynamic imports this can be rewritten to import(moduleId)
-        fetch(moduleId)
-          .then(r => r.text())
-          .then(r => r.replace('export default', 'return').replace(exportRegexp, ''))
-          .then(moduleString => {
-            events.trigger('loadAnimation', {
-              data: {
-                index: this.index,
-                moduleId,
-                moduleString,
-                parameters: values
-              }
-            });
-          })
-          .catch(console.error);
 
         // load the module and initialize it and load the animations to get the parameters
         // match them and add them as a placeholder to indicate default values
@@ -146,6 +133,15 @@ export default class Layer {
               });
               delete this.preSelectedValues;
             }
+
+            // send the loadAnimation to the clients
+            events.trigger('loadAnimation', {
+              data: {
+                index: this.index,
+                moduleId,
+                parameters: values
+              }
+            });
           })
           .catch(console.error);
       } else {
@@ -214,6 +210,7 @@ export default class Layer {
   setAllClientLayers() {
     // this.moduleId = null;
     const { isEnabled } = this;
+    this.justLoadAnyway = true;
     this.formNode.dispatchEvent(new Event('submit'));
 
     setTimeout(() => {

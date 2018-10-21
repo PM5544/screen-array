@@ -3,7 +3,7 @@ import Flash from '../animations/Flash.mjs';
 
 const maxLayers = 7;
 // the collection of all layers which are rendered each frame on the canvas
-const layers = [];
+export const layers = [];
 
 {
   let index = 0;
@@ -95,5 +95,3 @@ export function setControlParameters(args) {
     }
   });
 }
-
-export default layers;
