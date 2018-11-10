@@ -5,6 +5,7 @@ export default function(
   type,
   { to = 'clients', targets, id, data = {} } = {}
 ) {
+  // console.log(to, data);
   switch (targets) {
     case 'byId':
       clientsServer.to(id).emit(type, data);

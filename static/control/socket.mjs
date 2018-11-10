@@ -1,6 +1,4 @@
 /* globals io */
-import { qSelect } from './dom.mjs';
-import { getControlParameters } from './layers.mjs';
 import * as events from './events.mjs';
 
 io({ transports: ['websocket'] });
@@ -9,19 +7,19 @@ export const clients = io('/clients');
 export const control = io('/control');
 
 control.on('clientError', data => {
-  qSelect('div').style.background = '#ff0000';
+  document.querySelector('div').style.background = '#ff0000';
   console.error(JSON.parse(data));
 });
 
 [
   'blackOutOff',
   'blackOutOn',
-  'disable',
-  'enable',
+  'disableLayer',
+  'enableLayer',
   'flashOn',
   'flashOff',
   'loadAnimation',
-  'setParameters',
+  'setLayerProperties',
   'restartAnimation'
 ].forEach(type => {
   events.listen(type, function(payload) {
@@ -29,10 +27,11 @@ control.on('clientError', data => {
   });
 });
 
-control.on('getControlParameters', ({ id }) => {
-  control.emit('setControlParameters', {
+control.on('getLayerProperties', ({ id }) => {
+  const layers = document.querySelector('c-layers').layers;
+  control.emit('setLayerProperties', {
     targets: 'byId',
     id,
-    data: getControlParameters()
+    data: layers.map(l => l.getLayerProperties())
   });
 });

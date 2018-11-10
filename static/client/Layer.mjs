@@ -12,27 +12,27 @@ export default class Layer {
     }
   }
 
-  setParameters(parameters) {
-    // console.log(parameters);
-    if (parameters && this.animation) {
-      for (let key in parameters) {
+  setProperties(properties) {
+    // console.log(properties);
+    if (properties && this.animation) {
+      for (let key in properties) {
         const priorValue = this.animation[key];
         // console.log(priorValue);
         if ('number' === typeof priorValue) {
-          this.animation[key] = Number(parameters[key]);
+          this.animation[key] = Number(properties[key]);
         }
       }
     }
   }
 
   load(args) {
-    const { moduleId, parameters } = args;
+    const { moduleId, properties } = args;
 
     if (moduleId) {
       this.disable();
       import(moduleId).then(mod => {
         this.animation = new mod.default(this.clientPosition);
-        this.setParameters(parameters);
+        this.setProperties(properties);
       });
     }
   }
@@ -71,12 +71,13 @@ export default class Layer {
   }
 
   setClientPosition(args) {
+    // console.log(args);
     this.clientPosition = args;
   }
 
-  render(ctx, screen, levels) {
+  render(ctx, screen, audioInfo) {
     if (this.isEnabled && this.animation) {
-      this.animation.render(ctx, screen, levels);
+      this.animation.render(ctx, screen, audioInfo);
     }
   }
 }

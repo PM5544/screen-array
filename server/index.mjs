@@ -16,21 +16,21 @@ controlServer.on('connection', function(co) {
     'blackOutOff',
     'changeColor',
     'clearLayer',
-    'disable',
-    'disableAll',
-    'enable',
-    'enableAll',
+    'disableLayer',
+    'disableAllLayers',
+    'enableLayer',
+    'enableAllLayers',
     'flashOn',
     'flashOff',
     'identify',
     'loadAnimation',
     'resetLayer',
-    'setParameters',
+    'setLayerProperties',
     'setSocketNumber',
     'restartAnimation'
   ].forEach(type => {
     co.on(type, function(instructions) {
-      console.log(type, instructions);
+      // console.log(type, instructions);
       sendToSockets(type, instructions);
     });
   });
@@ -62,6 +62,7 @@ controlServer.on('connection', function(co) {
       });
 
       registeredSockets.socketsLeftValues.forEach((socketId, index, ar) => {
+        // console.log(socketId, index, ar.length, true );
         sendToSockets('setClientPosition', {
           targets: 'byId',
           id: socketId,
@@ -69,6 +70,7 @@ controlServer.on('connection', function(co) {
         });
       });
       registeredSockets.socketsRightValues.forEach((socketId, index, ar) => {
+        // console.log(socketId, index, ar.length, false );
         sendToSockets('setClientPosition', {
           targets: 'byId',
           id: socketId,

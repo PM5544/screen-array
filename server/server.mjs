@@ -7,7 +7,7 @@ import { join } from 'path';
 export default http.createServer(function(request, response) {
   const { pathname } = url.parse(request.url);
 
-  if (pathname.includes('/errors') && request.method === 'POST') {
+  if (request.method === 'POST' && pathname.includes('/errors')) {
     let bodyData = '';
     request.on('data', data => {
       bodyData += data;

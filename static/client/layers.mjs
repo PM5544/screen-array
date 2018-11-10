@@ -1,13 +1,13 @@
 import Layer from './Layer.mjs';
 import Flash from '../animations/Flash.mjs';
+import { LAYER_COUNT } from '../constants.mjs';
 
-const maxLayers = 7;
 // the collection of all layers which are rendered each frame on the canvas
 export const layers = [];
 
 {
   let index = 0;
-  while (index < maxLayers) {
+  while (index <= LAYER_COUNT) {
     const layer = new Layer({ index });
     layers.push(layer);
     index++;
@@ -16,15 +16,7 @@ export const layers = [];
 
 export const flashLayer = new Layer();
 flashLayer.setAnimation(Flash, true);
-// export function add(index = layers.length) {
-//   const layer = new Layer();
 
-//   if (index >= layers.length) {
-//     layers.push(layer);
-//   } else {
-//     layers.splice(index, 1, layer);
-//   }
-// }
 export function flashOn() {
   this.flashLayer.enable();
 }
@@ -32,19 +24,19 @@ export function flashOff() {
   this.flashLayer.disable();
 }
 
-export function disable({ index }) {
+export function disableLayer({ index }) {
   layers[index].disable();
 }
-export function enable({ index }) {
+export function enableLayer({ index }) {
   layers[index].enable();
 }
 
-export function disableAll() {
+export function disableAllLayers() {
   layers.forEach(l => {
     l.disable();
   });
 }
-export function enableAll() {
+export function enableAllLayers() {
   layers.forEach(l => {
     l.enable();
   });
@@ -65,14 +57,6 @@ export function clearLayer({ index }) {
   layers[index].clear();
 }
 
-export function setParameters({ index, parameters }) {
-  if ('flashLayer' === index) {
-    flashLayer.setParameters(parameters);
-  } else {
-    layers[index].setParameters(parameters);
-  }
-}
-
 export function restartAnimation({ index }) {
   layers[index].restart();
 }
@@ -88,10 +72,11 @@ export function setClientPosition(args) {
   });
 }
 
-export function setControlParameters(args) {
-  args.forEach((arg, i) => {
-    if (arg) {
-      layers[i].setParameters(arg);
-    }
-  });
+export function setLayerProperties({index, properties}) {
+  console.log('setLayerProperties called', index, properties);
+  if ('flashLayer' === index) {
+    flashLayer.setProperties(properties);
+  } else {
+    layers[index].setProperties(properties);
+  }
 }

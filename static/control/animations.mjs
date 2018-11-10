@@ -1,7 +1,7 @@
 import { control } from './socket.mjs';
 import { trigger } from './events.mjs';
 
-const animationExportProperties = ['name', 'parameters', 'tags'];
+const animationExportProperties = ['name', 'properties', 'tags'];
 
 let allAnimations = new Map();
 

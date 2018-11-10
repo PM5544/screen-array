@@ -1,11 +1,13 @@
 import { layers, flashLayer } from './layers.mjs';
-import { clear, ctx, properties } from './canvas.mjs';
+import { clear, ctx, dimensions } from './canvas.mjs';
 
 let drawing = true;
-const audioLevels = { left: [], right: [] };
-export function setAudioLevels({ right, left }) {
-  audioLevels.left = left;
-  audioLevels.right = right;
+const audioLevels = {
+  spectrum: []
+};
+
+export function setAudioLevels({spectrum}) {
+  audioLevels.spectrum = spectrum;
 }
 
 function drawFrame() {
@@ -13,10 +15,10 @@ function drawFrame() {
 
   if (drawing) {
     layers.forEach(l => {
-      l.render(ctx, properties, audioLevels);
+      l.render(ctx, dimensions, audioLevels);
     });
 
-    flashLayer.render(ctx, properties, audioLevels);
+    flashLayer.render(ctx, dimensions, audioLevels);
 
     window.requestAnimationFrame(drawFrame);
   }

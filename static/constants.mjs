@@ -1,4 +1,5 @@
 export const CLIENT_COUNT = 6;
+export const LAYER_COUNT = 6;
 
 export const NOTE_OFF = 0x80; //128
 export const NOTE_ON = 0x90; //144;

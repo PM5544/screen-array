@@ -15,48 +15,47 @@ clients.on('refresh', function() {
   'blackOutOff',
   'blackOutOn',
   'clearLayer',
-  'disable',
-  'disableAll',
-  'enable',
-  'enableAll',
+  'disableLayer',
+  'disableAllLayers',
+  'enableLayer',
+  'enableAllLayers',
   'flashOn',
   'flashOff',
 
   'restartAnimation',
   'setClientPosition',
-  'setControlParameters'
 ].forEach(type => {
   clients.on(type, args => {
     layers[type](args);
   });
 });
-['loadAnimation', 'setParameters'].forEach(type => {
+['loadAnimation', 'setLayerProperties'].forEach(type => {
   clients.on(type, args => {
     const {
-      parameters: { color }
+      properties: { color }
     } = args;
     if (color) {
       const r = parseInt(color.substr(1, 2), 16);
       const g = parseInt(color.substr(3, 2), 16);
       const b = parseInt(color.substr(5, 2), 16);
-      delete args.parameters.color;
-      Object.assign(args.parameters, { r, g, b });
+      delete args.properties.color;
+      Object.assign(args.properties, { r, g, b });
     }
     layers[type](args);
   });
 });
 // clients.on(, args => {
 //   const {
-//     parameters: { color }
+//     properties: { color }
 //   } = args;
 //   if (color) {
 //     const r = parseInt(color.substr(1, 2), 16);
 //     const g = parseInt(color.substr(3, 2), 16);
 //     const b = parseInt(color.substr(5, 2), 16);
-//     delete args.parameters.color;
-//     Object.assign(args.parameters, { r, g, b });
+//     delete args.properties.color;
+//     Object.assign(args.properties, { r, g, b });
 //   }
-//   layers.setParameters(args);
+//   layers.setProperties(args);
 // });
 
 const socketNumber = localStorage.getItem('socketNumber');
@@ -75,6 +74,6 @@ clients.on('identify', function(data) {
   overlay(data.id);
 });
 
-clients.on('levels', function(data) {
+clients.on('audioSpectrumValues', function(data) {
   setAudioLevels(data);
 });

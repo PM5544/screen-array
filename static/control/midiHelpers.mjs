@@ -1,5 +1,8 @@
 import * as events from './events.mjs';
-import layers from './layers.mjs';
+import './custom-elements/c-layer.mjs';
+import './custom-elements/c-layers.mjs';
+import './custom-elements/c-flash-layer.mjs';
+
 import { hasKeyMapping } from './midiMapping.mjs';
 import {
   NOTE_OFF,
@@ -16,6 +19,8 @@ import {
   LIGHT_YELLOW, // eslint-disable-line no-unused-vars
   LIGHT_YELLOW_BLINK
 } from '../constants.mjs';
+
+const layers = document.querySelector('c-layers').layers;
 
 export function handleMidiInputMessage({ data: [ctrl, key, value] }) {
   // console.log(ctrl, key, value);
@@ -67,7 +72,7 @@ export function addOutputEvents(port) {
         port.send([NOTE_ON, 64 + index, LIGHT_OFF]);
       }
     }),
-    events.listen('enable', function enableLayerByMidi({ data: { index } }) {
+    events.listen('enableLayer', function enableLayerByMidi({ data: { index } }) {
       if (layers[index].moduleId) {
         let counter = 56;
         while (counter >= 0) {
@@ -78,7 +83,7 @@ export function addOutputEvents(port) {
         }
       }
     }),
-    events.listen('disable', function disableLayerByMidi({ data: { index } }) {
+    events.listen('disableLayer', function disableLayerByMidi({ data: { index } }) {
       if (layers[index].moduleId) {
         let counter = 56;
         while (counter >= 0) {
@@ -120,12 +125,15 @@ export function sayHi(port) {
     }
   }
   {
-    let counter = 63;
-    while (counter >= 0) {
-      if (hasKeyMapping(counter)) {
-        port.send([NOTE_ON, counter, LIGHT_GREEN]);
+    setTimeout(() => {
+      // also highlight the midi buttons that are active for the flashLayer
+      let counter = 63;
+      while (counter >= 0) {
+        if (hasKeyMapping(counter)) {
+          port.send([NOTE_ON, counter, LIGHT_GREEN]);
+        }
+        counter -= 8;
       }
-      counter -= 8;
-    }
+    }, 0);
   }
 }

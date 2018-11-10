@@ -2,21 +2,29 @@ import { spawn } from 'child_process';
 import sendToSockets from './sendToSockets';
 
 const audio = spawn('ssh', ['pi@audio', 'projects/cava/cava']);
-const audioLength = 24;
-const lengthPerSide = audioLength / 2;
+const audioValuesCount = 24;
+const audioValuesCountPerSide = audioValuesCount / 2;
 const lineFeed = '\n';
 const int = v => parseInt(v, 10);
 
 function parse(value) {
   const levels = value.split(';').map(int);
-  const right = levels.splice(lengthPerSide);
+  const right = levels.splice(audioValuesCountPerSide);
   // console.log('---');
   // console.log('L', levels.reverse());
   // console.log('R', right);
-  sendToSockets('levels', {
+  sendToSockets('audioSpectrumValues', {
+    targets: 'side',
+    id: 'right',
     data: {
-      left: levels.reverse(),
-      right
+      spectrum: right.reverse()
+    }
+  });
+  sendToSockets('audioSpectrumValues', {
+    targets: 'side',
+    id: 'left',
+    data: {
+      spectrum: levels.reverse()
     }
   });
 }

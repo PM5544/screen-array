@@ -73,7 +73,7 @@
   },
   "48": {
     "value": {
-      "command": "setParameters",
+      "command": "setProperties",
       "property": "primary",
       "payload": {
         "index": 0
@@ -89,7 +89,7 @@
   },
   "49": {
     "value": {
-      "command": "setParameters",
+      "command": "setProperties",
       "property": "primary",
       "payload": {
         "index": 1
@@ -105,7 +105,7 @@
   },
   "50": {
     "value": {
-      "command": "setParameters",
+      "command": "setProperties",
       "property": "primary",
       "payload": {
         "index": 2
@@ -121,7 +121,7 @@
   },
   "51": {
     "value": {
-      "command": "setParameters",
+      "command": "setProperties",
       "property": "primary",
       "payload": {
         "index": 3
@@ -137,7 +137,7 @@
   },
   "52": {
     "value": {
-      "command": "setParameters",
+      "command": "setProperties",
       "property": "primary",
       "payload": {
         "index": 4
@@ -153,7 +153,7 @@
   },
   "53": {
     "value": {
-      "command": "setParameters",
+      "command": "setProperties",
       "property": "primary",
       "payload": {
         "index": 5
@@ -169,7 +169,7 @@
   },
   "54": {
     "value": {
-      "command": "setParameters",
+      "command": "setProperties",
       "property": "primary",
       "payload": {
         "index": 6
@@ -185,7 +185,7 @@
   },
   "55": {
     "value": {
-      "command": "setParameters",
+      "command": "setProperties",
       "property": "primary",
       "payload": {
         "index": "flashLayer"
@@ -322,12 +322,12 @@
   },
   "88": {
     "on": {
-      "command": "enableAll"
+      "command": "enableAllLayers"
     }
   },
   "89": {
     "on": {
-      "command": "disableAll"
+      "command": "disableAllLayers"
     }
   },
   "98": {

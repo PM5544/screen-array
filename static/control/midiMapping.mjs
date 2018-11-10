@@ -32,7 +32,7 @@ export function setup() {
           if ('value' === variant) {
             const { payload, command, property, targets } = instruction[variant];
             variants[variant].set(parseInt(id, 10), value => {
-              payload.parameters = { [property]: value };
+              payload.properties = { [property]: value };
               events.trigger(command, {
                 targets,
                 data: payload
@@ -78,7 +78,7 @@ export function setup() {
   });
 
   // eventsTearDown.push(
-  //   events.listen('disable', function({ data: { index } }) {
+  //   events.listen('disableLayer', function({ data: { index } }) {
   //     outputs.send([NOTE_ON, 56 + index, 0]);
   //   })
   // );
