@@ -2,12 +2,12 @@ const end = Math.PI * 2;
 
 export const name = 'random dots';
 export const tags = ['simple', 'singleColor'];
-export const parameters = ['color', 'dotCount'];
+export const properties = ['color', 'dotCount'];
 
 class Dot {
-  constructor(properties, r, g, b) {
-    this.x = Math.round(Math.random() * properties.width);
-    this.y = Math.round(Math.random() * properties.height);
+  constructor(dimension, r, g, b) {
+    this.x = Math.round(Math.random() * dimension.width);
+    this.y = Math.round(Math.random() * dimension.height);
     const rand = Math.random();
     this.radius = 15 + rand * 25;
     this.sizeStep = 0.01 + rand * 0.07;
@@ -59,13 +59,13 @@ export default class Dots {
     this.dots.length = 0;
   }
 
-  render(ctx, properties) {
+  render(ctx, dimension) {
     this.dots = this.dots.filter(d => !d.done);
 
     if (this.dots.length < this.dotCount) {
       let addSoMany = this.dotCount - this.dots.length;
       while (addSoMany > 0) {
-        this.dots.push(new Dot(properties, this.r, this.g, this.b));
+        this.dots.push(new Dot(dimension, this.r, this.g, this.b));
         addSoMany--;
       }
     }

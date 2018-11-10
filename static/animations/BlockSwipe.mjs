@@ -1,6 +1,6 @@
 export const name = 'block swipe';
 export const tags = ['simple', 'block', 'singleColor'];
-export const parameters = ['frameCount', 'color', 'opacity'];
+export const properties = ['color', 'frameCount', 'opacity'];
 
 export default class {
   set primary(val) {
@@ -28,9 +28,9 @@ export default class {
     this.frame = 0;
   }
 
-  render(ctx, properties) {
+  render(ctx, dimension) {
     if (this.frame < this.frameCount) {
-      const { width, height } = properties;
+      const { width, height } = dimension;
       const { r, g, b, opacity } = this;
       const halfCount = Math.floor(this.frameCount / 2);
 

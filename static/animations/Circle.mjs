@@ -2,7 +2,7 @@ const circleEnd = Math.PI * 2;
 
 export const name = 'circle medium';
 export const tags = ['simple', 'singleColor'];
-export const parameters = ['frameCount', 'lineWidth', 'color', 'opacity'];
+export const properties = ['color', 'frameCount', 'lineWidth', 'opacity'];
 
 export default class {
   set primary(val) {
@@ -33,11 +33,11 @@ export default class {
     this.frame = 0;
   }
 
-  render(ctx, properties) {
+  render(ctx, dimension) {
     if (this.frame === this.stopFrame) {
       return;
     } else if (this.frame < this.frameCount) {
-      const { centerX, centerY } = properties;
+      const { centerX, centerY } = dimension;
       const { r, g, b, opacity } = this;
 
       ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;

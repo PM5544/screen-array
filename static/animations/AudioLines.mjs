@@ -1,4 +1,4 @@
-export const name = 'audioBar';
+export const name = 'audioLines';
 export const tags = ['audio', 'simple', 'singleColor'];
 export const properties = ['color', 'lineWidth', 'opacity'];
 
@@ -17,13 +17,11 @@ export default class {
   }
 
   reset() {
-    this.lineWidth = 1;
     this.r = 255;
     this.g = 255;
     this.b = 255;
     this.opacity = 1;
-    this.offset = 250;
-    this.x = 0;
+    this.lineWidth = 2;
   }
 
   restart() {}
@@ -39,23 +37,24 @@ export default class {
       g,
       b,
       opacity,
-      // lineWidth,
-      // x,
-      // offset,
-      position: { /* index, total = 1,  mirrored = false */ }
+      lineWidth,
+      position: { index, total = 1 }
     } = this;
 
-    const size = width / spectrum.length;
+    const barsToShow = Math.floor(spectrum.length / total);
+    const selectedLevels = spectrum.slice(index * barsToShow, (index + 1) * barsToShow);
+    const barWidth = Math.floor(width / selectedLevels.length);
     const one = height / 100;
 
     ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-    ctx.lineWidth = this.lineWidth;
+    ctx.lineWidth = lineWidth;
 
-    ctx.beginPath();
-    spectrum.forEach((v, i) => {
-      ctx.lineTo(i * size, height - (v * one));
+    selectedLevels.forEach((v, i) => {
+      const h = height - v * one;
+      ctx.beginPath();
+      ctx.moveTo(i * barWidth, h);
+      ctx.lineTo((i + 1) * barWidth, h);
+      ctx.stroke();
     });
-
-    ctx.stroke();
   }
 }

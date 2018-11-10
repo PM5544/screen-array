@@ -2,7 +2,7 @@ const circleEnd = Math.PI * 2;
 
 export const name = 'swipe line';
 export const tags = ['simple', 'singleColor'];
-export const parameters = ['frameCount', 'lineWidth', 'color', 'opacity'];
+export const properties = ['color', 'frameCount', 'lineWidth', 'opacity'];
 
 export default class {
   set primary(val) {
@@ -34,11 +34,11 @@ export default class {
     this.frame = 0;
   }
 
-  render(ctx, properties) {
+  render(ctx, dimension) {
     if (this.frame === this.stopFrame) {
       return;
     } else if (this.frame < this.frameCount) {
-      const { width, height, centerY } = properties;
+      const { width, height, centerY } = dimension;
       const {
         r,
         g,

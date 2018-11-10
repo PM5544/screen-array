@@ -1,6 +1,6 @@
 export const name = 'wide';
 export const tags = ['simple', 'singleColor'];
-export const parameters = ['lineWidth', 'color', 'opacity'];
+export const properties = ['color', 'lineWidth', 'opacity'];
 
 export default class {
   set primary(val) {
@@ -28,8 +28,8 @@ export default class {
     // this.frame = 0;
   }
 
-  render(ctx, properties) {
-    const { width, height } = properties;
+  render(ctx, dimension) {
+    const { width, height } = dimension;
     const {
       r,
       g,

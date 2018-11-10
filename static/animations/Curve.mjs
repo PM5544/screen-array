@@ -1,6 +1,6 @@
 export const name = 'curve';
 export const tags = ['simple', 'singleColor'];
-export const parameters = ['height', 'stepSize', 'lineWidth', 'color', 'opacity'];
+export const properties = ['color', 'height', 'stepSize', 'lineWidth', 'opacity'];
 
 export default class {
   set primary(val) {
@@ -30,8 +30,8 @@ export default class {
     this.offset = 0;
   }
 
-  render(ctx, properties) {
-    const { foregroundColor, centerX, centerY, width } = properties;
+  render(ctx, dimension) {
+    const { foregroundColor, centerX, centerY, width } = dimension;
     const { r, g, b, opacity, offset } = this;
     const partX = width / 2;
 

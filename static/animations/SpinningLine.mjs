@@ -1,6 +1,6 @@
 export const name = 'spining line';
 export const tags = ['simple', 'singleColor'];
-export const parameters = ['radius', 'lineWidth', 'color', 'opacity', 'velocity', 'radian'];
+export const properties = ['color', 'radius', 'lineWidth', 'opacity', 'velocity'];
 
 export default class {
   set primary(val) {
@@ -30,8 +30,8 @@ export default class {
     this.radian = 0;
   }
 
-  render(ctx, properties) {
-    const { centerX, centerY } = properties;
+  render(ctx, dimension) {
+    const { centerX, centerY } = dimension;
     const { r, g, b, opacity } = this;
 
     ctx.strokeStyle = `rgba(${r},${g},${b},${opacity}`;

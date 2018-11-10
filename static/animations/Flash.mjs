@@ -1,6 +1,6 @@
 export const name = 'flash';
 export const tags = ['simple', 'singleColor'];
-export const parameters = ['color', 'opacity'];
+export const properties = ['color', 'opacity'];
 
 export default class {
   set primary(val) {
@@ -24,8 +24,8 @@ export default class {
 
   restart() {}
 
-  render(ctx, properties) {
-    const { width, height } = properties;
+  render(ctx, dimension) {
+    const { width, height } = dimension;
     const { r, g, b, opacity } = this;
 
     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
