@@ -16,13 +16,17 @@ window.customElements.define(
 
       events.listen('disableAllLayers', () => {
         this.layers.forEach(l => {
-          l.disable && l.disable();
+          if ('isEnabled' in l) {
+            l.isEnabled = false;
+          }
         });
       });
 
       events.listen('enableAllLayers', () => {
         this.layers.forEach(l => {
-          l.enable && l.enable();
+          if ('isEnabled' in l) {
+            l.isEnabled = true;
+          }
         });
       });
 
@@ -31,10 +35,13 @@ window.customElements.define(
           l.setClientLayerProperties && l.setClientLayerProperties();
         });
       });
+
+      events.listen('loadAnimationIntoControlLayer', ({ data: { index } }) => {
+        this.layers[index].selectAnimation();
+      });
     }
 
     connectedCallback() {
-      console.log('Layers connected!');
       let index = 0;
       while (index <= LAYER_COUNT) {
         const layer = document.createElement('c-layer');
@@ -50,17 +57,7 @@ window.customElements.define(
       this.appendChild(layer);
     }
 
-    disconnectedCallback() {
-      console.log('Layers disconnected!');
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-      console.log(name, oldValue, newValue);
-      this.index = newValue;
-    }
-
-    adoptedCallback() {
-      console.log('Layers adopted!');
-    }
+    disconnectedCallback() {}
+    adoptedCallback() {}
   }
 );

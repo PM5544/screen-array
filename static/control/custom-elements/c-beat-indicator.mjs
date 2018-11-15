@@ -41,22 +41,22 @@ window.customElements.define(
       this.beatNodes = [];
       this.interval;
       this.iterator = 0;
-      this._shadowRoot = this.attachShadow({ mode: 'open' });
+      this.attachShadow({ mode: 'open' });
 
       const styles = document.createElement('style');
       styles.textContent = styleContent;
-      this._shadowRoot.appendChild(styles);
+      this.shadowRoot.appendChild(styles);
 
       let _bars = bars;
       while (--_bars >= 0) {
-        this._shadowRoot.appendChild(document.createElement('div'));
+        this.shadowRoot.appendChild(document.createElement('div'));
       }
-      this.beatNodes = Array.from(this._shadowRoot.querySelectorAll('div'));
+      this.beatNodes = Array.from(this.shadowRoot.querySelectorAll('div'));
 
       this.textIndicator = document.createElement('span');
       this.textIndicator.innerText = '---,--';
 
-      this._shadowRoot.appendChild(this.textIndicator);
+      this.shadowRoot.appendChild(this.textIndicator);
 
       events.listen('beatSyncRestart', this.syncRestart.bind(this));
     }
@@ -71,7 +71,7 @@ window.customElements.define(
       }
     }
 
-    deactivatePrevious () {
+    deactivatePrevious() {
       if (0 !== this.iterator) {
         this.beatNodes[this.iterator - 1].classList.remove('active');
       } else {
@@ -110,20 +110,8 @@ window.customElements.define(
       this.previousSyncRestart = now;
     }
 
-    connectedCallback() {
-      console.log('Layers connected!');
-    }
-
-    disconnectedCallback() {
-      console.log('Layers disconnected!');
-    }
-
-    // attributeChangedCallback(name, oldValue, newValue) {
-    //   console.log(name, oldValue, newValue);
-    // }
-
-    adoptedCallback() {
-      console.log('Layers adopted!');
-    }
+    connectedCallback() {}
+    disconnectedCallback() {}
+    adoptedCallback() {}
   }
 );

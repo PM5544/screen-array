@@ -6,6 +6,7 @@ import './custom-elements/c-layers.mjs';
 import './custom-elements/c-full-screen-toggle.mjs';
 import './custom-elements/c-client-statuses.mjs';
 import './custom-elements/c-beat-indicator.mjs';
+import './custom-elements/c-animations-explorer.mjs';
 
 document.querySelector('[data-action="refresh"]').addEventListener('click', e => {
   e.preventDefault();

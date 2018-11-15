@@ -1,4 +1,60 @@
 {
+  "0": {
+    "on": {
+      "command": "loadAnimationIntoControlLayer",
+      "payload": {
+        "index": 0
+      }
+    }
+  },
+  "1": {
+    "on": {
+      "command": "loadAnimationIntoControlLayer",
+      "payload": {
+        "index": 1
+      }
+    }
+  },
+  "2": {
+    "on": {
+      "command": "loadAnimationIntoControlLayer",
+      "payload": {
+        "index": 2
+      }
+    }
+  },
+  "3": {
+    "on": {
+      "command": "loadAnimationIntoControlLayer",
+      "payload": {
+        "index": 3
+      }
+    }
+  },
+  "4": {
+    "on": {
+      "command": "loadAnimationIntoControlLayer",
+      "payload": {
+        "index": 4
+      }
+    }
+  },
+  "5": {
+    "on": {
+      "command": "loadAnimationIntoControlLayer",
+      "payload": {
+        "index": 5
+      }
+    }
+  },
+  "6": {
+    "on": {
+      "command": "loadAnimationIntoControlLayer",
+      "payload": {
+        "index": 6
+      }
+    }
+  },
   "40": {
     "on": {
       "command": "restartAnimation",
@@ -73,7 +129,7 @@
   },
   "48": {
     "value": {
-      "command": "setProperties",
+      "command": "setLayerProperties",
       "property": "primary",
       "payload": {
         "index": 0
@@ -89,7 +145,7 @@
   },
   "49": {
     "value": {
-      "command": "setProperties",
+      "command": "setLayerProperties",
       "property": "primary",
       "payload": {
         "index": 1
@@ -105,7 +161,7 @@
   },
   "50": {
     "value": {
-      "command": "setProperties",
+      "command": "setLayerProperties",
       "property": "primary",
       "payload": {
         "index": 2
@@ -121,7 +177,7 @@
   },
   "51": {
     "value": {
-      "command": "setProperties",
+      "command": "setLayerProperties",
       "property": "primary",
       "payload": {
         "index": 3
@@ -137,7 +193,7 @@
   },
   "52": {
     "value": {
-      "command": "setProperties",
+      "command": "setLayerProperties",
       "property": "primary",
       "payload": {
         "index": 4
@@ -153,7 +209,7 @@
   },
   "53": {
     "value": {
-      "command": "setProperties",
+      "command": "setLayerProperties",
       "property": "primary",
       "payload": {
         "index": 5
@@ -169,7 +225,7 @@
   },
   "54": {
     "value": {
-      "command": "setProperties",
+      "command": "setLayerProperties",
       "property": "primary",
       "payload": {
         "index": 6
@@ -185,7 +241,7 @@
   },
   "55": {
     "value": {
-      "command": "setProperties",
+      "command": "setLayerProperties",
       "property": "primary",
       "payload": {
         "index": "flashLayer"

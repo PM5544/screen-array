@@ -6,7 +6,9 @@
   --padding: 0.3rem;
   --border-color: #444;
   --actionable-color: #666;
+  --font-size: 11px;
   --font-color: #e2e2e2;
+  --font-family: sans-serif;
   --font-color-dark: #868383;
   --enabled-color: #145037;
   --disabled-color: #421616;
@@ -15,7 +17,8 @@ body,
 html {
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
 }
 html {
   background: #222;
@@ -132,9 +135,6 @@ c-flash-layer form {
   margin: 0;
   height: 100%;
 }
-c-flash-layer form {
-  padding-bottom: 1.45rem;
-}
 c-layer .properties,
 c-flash-layer .properties {
   flex: 1;
@@ -164,14 +164,18 @@ c-flash-layer td,
 c-flash-layer th {
   text-align: left;
   font-weight: normal;
-  font-size: 13px;
+  font-size: var(--font-size);
   color: var(--font-color);
 }
 c-layer th,
 c-flash-layer th {
   color: var(--font-color-dark);
 }
-
+.animation-name{
+  font-size: var(--font-size);
+  color: var(--font-color);
+  padding: var(--padding);
+}
 .tab-switcher {
   display: flex;
   list-style: none;
@@ -192,7 +196,9 @@ c-flash-layer th {
 .tab {
   margin-top: 0;
 }
-
+.highlight {
+  background-color: var(--actionable-color);
+}
 .hidden {
   display: none;
 }

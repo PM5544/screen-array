@@ -3,42 +3,41 @@
 <head>
   <meta charset="utf-8">
   <title>Control page</title>
-  <script src="/socket.io/socket.io.js"></script>
-  <link rel="stylesheet" href="control.css" type="text/css" />
+  <script src=/socket.io/socket.io.js></script>
+  <link rel=stylesheet href=control.css type=text/css />
 </head>
 <body>
-  <section class="actions">
-    <button data-action="refresh">refresh clients</button>
-    <button data-action="setAllLayers">set all layers</button>
-    <div class="statuses">
+  <section class=actions>
+    <button data-action=refresh>refresh clients</button>
+    <button data-action=setAllLayers>set all layers</button>
+    <div class=statuses>
       <c-client-statuses></c-client-statuses>
       <c-beat-indicator></c-beat-indicator>
     </div>
     <button is="c-full-screen-toggle">go fullScreen</button>
   </section>
   <c-layers></c-layers>
-  <section data-container="layers" class="layers"></section>
+  <!-- <section data-container=layers class=layers></section> -->
   <section>
     <ul data-action="tab-switch" class="tab-switcher">
       <li><button>Preview</button></li>
       <li><button>Explorer</button></li>
       <li><button>Audio</button></li>
     </ul>
+    <c-animations-explorer></c-animations-explorer>
     <div class="preview-channels tab" data-selector="tab-preview"></div>
     <div class="explorer tab" data-selector="tab-explorer"></div>
     <div class="audio tab" data-selector="tab-audio"></div>
   </section>
 </body>
-<script type="module" src="control/index.mjs"></script>
+<script type=module src="control/index.mjs"></script>
 <template id=layer>
   <div>
-    <form>
+    <form data-selector=form>
       <div data-selector=enabledIndicator class="is-disabled"></div>
-      <div class=actions>
-        <select name=moduleId></select>
-      </div>
-      <div class=properties data-selector=properties>
-        <table>
+      <div data-selector=animationName class="animation-name"></div>
+      <div class=properties>
+        <table data-selector=propertiesTable>
           <thead>
             <tr>
               <th>name</th>
@@ -49,11 +48,12 @@
         </table>
       </div>
       <div class=actions>
-        <button>apply</button>
+        <button data-action=apply disabled>apply</button>
+        <button data-action=toggleEnabled type=button is="c-toggle-button" disabled>enable</button>
       </div>
       <div class=actions>
-        <button data-action=enable type=button>enable</button>
-        <button data-action=disable type=button>disable</button>
+        <button data-action=clear type=button disabled>clear</button>
+        <button data-action=load type=button disabled>load</button>
       </div>
     </form>
   </div>

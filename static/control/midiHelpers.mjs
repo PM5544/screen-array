@@ -42,38 +42,68 @@ export function handleMidiInputMessage({ data: [ctrl, key, value] }) {
   }
 }
 
+function restoreMidiLayerIndicators(index, port) {
+  if (index === 7) {
+    let counter = 63;
+    while (counter >= 0) {
+      if (hasKeyMapping(counter)) {
+        port.send([NOTE_ON, counter, LIGHT_GREEN]);
+      }
+      counter -= 8;
+    }
+  } else if (layers[index].isEnabled) {
+    let counter = index;
+    while (counter < 64) {
+      if (hasKeyMapping(counter)) {
+        port.send([NOTE_ON, counter, LIGHT_GREEN]);
+      } else {
+        port.send([NOTE_ON, counter, LIGHT_OFF]);
+      }
+      counter += 8;
+    }
+  } else {
+    let counter = index;
+    while (counter < 64) {
+      port.send([NOTE_ON, counter, LIGHT_OFF]);
+      counter += 8;
+    }
+  }
+}
+
 export function addOutputEvents(port) {
   sayHi(port);
 
   return [
     events.listen('restoreMidi', function restoreMidi() {
       layers.forEach((layer, index) => {
-        if (layer.moduleId) {
+        if (layer.moduleSpecifier) {
           port.send([NOTE_ON, 64 + index, LIGHT_GREEN]);
-          if (layer.isEnabled) {
-            let counter = 56;
-            while (counter >= 0) {
-              if (hasKeyMapping(counter)) {
-                port.send([NOTE_ON, counter + index, LIGHT_GREEN]);
-              }
-              counter -= 8;
-            }
-          }
+          restoreMidiLayerIndicators(index, port);
+
+          // if (layer.isEnabled) {
+          //   let counter = 56;
+          //   while (counter >= 0) {
+          //     if (hasKeyMapping(counter)) {
+          //       port.send([NOTE_ON, counter + index, LIGHT_GREEN]);
+          //     }
+          //     counter -= 8;
+          //   }
+          // }
         }
       });
     }),
-    events.listen('enableLayerToggle', function enableLayerToggle({ data: { index } }) {
-      if (layers[index].moduleId) {
+    events.listen('enableMidiLayerToggle', function enableMidiLayerToggle({ data: { index } }) {
+      if (layers[index].moduleSpecifier) {
         port.send([NOTE_ON, 64 + index, LIGHT_GREEN]);
       }
     }),
-    events.listen('disableLayerToggle', function disableLayerToggle({ data: { index } }) {
-      if (layers[index].moduleId) {
+    events.listen('disableMidiLayerToggle', function disableMidiLayerToggle({ data: { index } }) {
+      if (layers[index].moduleSpecifier) {
         port.send([NOTE_ON, 64 + index, LIGHT_OFF]);
       }
     }),
     events.listen('enableLayer', function enableLayerByMidi({ data: { index } }) {
-      if (layers[index].moduleId) {
+      if (layers[index].moduleSpecifier) {
         let counter = 56;
         while (counter >= 0) {
           if (hasKeyMapping(counter)) {
@@ -84,7 +114,7 @@ export function addOutputEvents(port) {
       }
     }),
     events.listen('disableLayer', function disableLayerByMidi({ data: { index } }) {
-      if (layers[index].moduleId) {
+      if (layers[index].moduleSpecifier) {
         let counter = 56;
         while (counter >= 0) {
           port.send([NOTE_ON, counter + index, LIGHT_OFF]);
@@ -105,6 +135,18 @@ export function addOutputEvents(port) {
         }
       } else {
         port.send([NOTE_ON, 0 + index, LIGHT_OFF]);
+      }
+    }),
+    events.listen('selectedAnimationToLoad', function highlightLoadButtons() {
+      let counter = 7;
+      while (counter--) {
+        port.send([NOTE_ON, counter, LIGHT_YELLOW_BLINK]);
+      }
+    }),
+    events.listen('loadedAnimationIntoLayer', function restoreAllLayersMidiIndicators() {
+      let counter = 7;
+      while (counter--) {
+        restoreMidiLayerIndicators(counter, port);
       }
     })
   ];
@@ -127,13 +169,7 @@ export function sayHi(port) {
   {
     setTimeout(() => {
       // also highlight the midi buttons that are active for the flashLayer
-      let counter = 63;
-      while (counter >= 0) {
-        if (hasKeyMapping(counter)) {
-          port.send([NOTE_ON, counter, LIGHT_GREEN]);
-        }
-        counter -= 8;
-      }
+      restoreMidiLayerIndicators(7, port);
     }, 0);
   }
 }

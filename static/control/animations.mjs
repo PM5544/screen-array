@@ -7,21 +7,21 @@ let allAnimations = new Map();
 
 control.on('allAnimationPaths', function(animationPaths) {
   Promise.all(
-    animationPaths.map(path =>
-      import(path).then(module =>
+    animationPaths.map(specifier =>
+      import(specifier).then(module =>
         animationExportProperties.reduce(
           (prev, cur) =>
             Object.assign(prev, {
               [cur]: module[cur]
             }),
-          { path, module }
+          { specifier, module }
         )
       )
     )
   ).then(data => {
     allAnimations.clear();
     data.forEach(anim => {
-      allAnimations.set(anim.path, anim);
+      allAnimations.set(anim.specifier, anim);
     });
     trigger('allAnimationData', data);
   });

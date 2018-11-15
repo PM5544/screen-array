@@ -68,7 +68,6 @@ export default class {
     history.forEach((bar, barIndex) => {
       const center = barIndex * barWidth + halfBarWIdth;
       bar.forEach((h, i) => {
-        console.log(barIndex, h);
         const w = halfBarWIdth - (halfBarWIdth / this.count) * i;
         ctx.beginPath();
         ctx.moveTo(center - w, h + i * one);

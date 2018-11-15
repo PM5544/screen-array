@@ -1,7 +1,9 @@
+// import dynamicImport from './dynamicImport.mjs';
+
 export default class Layer {
   constructor(options = {}) {
     const { index } = options;
-    this.moduleId;
+    this.moduleSpecifier;
     this.animation;
     this.disable();
 
@@ -26,11 +28,11 @@ export default class Layer {
   }
 
   load(args) {
-    const { moduleId, properties } = args;
+    const { moduleSpecifier, properties } = args;
 
-    if (moduleId) {
+    if (moduleSpecifier) {
       this.disable();
-      import(moduleId).then(mod => {
+      import(moduleSpecifier).then(mod => {
         this.animation = new mod.default(this.clientPosition);
         this.setProperties(properties);
       });

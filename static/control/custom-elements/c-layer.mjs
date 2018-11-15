@@ -1,6 +1,8 @@
-import { getFormValues } from '../dom.mjs';
+import { getFormValues, NodesProxy, ActionsProxy } from '../dom.mjs';
 import * as events from '../events.mjs';
 import * as propertyTypes from '../propertyTypes.mjs';
+import './c-animation-preview.mjs';
+import './c-toggle-button.mjs';
 
 const { content } = document.getElementById('layer');
 
@@ -11,8 +13,55 @@ window.customElements.define(
       return ['index'];
     }
 
+    get moduleSpecifier() {
+      return this._moduleSpecifier;
+    }
+    set moduleSpecifier(specifier = false) {
+      this._moduleSpecifier = specifier;
+      this._moduleSpecifierChanged = true;
+      if (specifier) {
+        this.actions.clear.removeAttribute('disabled');
+        this.actions.toggleEnabled.removeAttribute('disabled', '');
+        this.actions.apply.removeAttribute('disabled', '');
+        import(specifier).then(({ name }) => {
+          this.animationName = name;
+        });
+      } else {
+        this.actions.clear.setAttribute('disabled', '');
+        this.actions.toggleEnabled.setAttribute('disabled', '');
+        this.actions.apply.setAttribute('disabled', '');
+        this.animationName = undefined;
+      }
+    }
+
+    get isEnabled() {
+      return this._isEnabled;
+    }
+    set isEnabled(_value) {
+      const value = !this.moduleSpecifier ? false : _value;
+
+      this._isEnabled = value;
+      if (this.isEnabled) {
+        events.trigger('enableLayer', { data: { index: this.index } });
+        this.actions.toggleEnabled.setAttribute('is-on', '');
+        this.nodes.enabledIndicator.classList.add('is-enabled');
+      } else {
+        events.trigger('disableLayer', { data: { index: this.index } });
+        this.actions.toggleEnabled.removeAttribute('is-on');
+        this.nodes.enabledIndicator.classList.remove('is-enabled');
+      }
+    }
+
+    set animationName (v = '') {
+      this.nodes.animationName.innerText = v;
+    }
+
+
     constructor() {
       super();
+
+      this.nodes = new NodesProxy(this);
+      this.actions = new ActionsProxy(this);
 
       this.addEventListener('mouseenter', () => {
         events.trigger('focusLayer', {
@@ -24,65 +73,72 @@ window.customElements.define(
           index: this.index
         });
       });
+
+      events.listen('selectedAnimationToLoad', data => {
+        this._selectedAnimationToLoad = data;
+        this.actions.load.removeAttribute('disabled');
+      });
+
+      events.listen('loadedAnimationIntoLayer', () => {
+        delete this._selectedAnimationToLoad;
+        this.actions.load.setAttribute('disabled', '');
+      });
     }
 
-    enable(forced = false) {
-      if (forced || (this.isEnabled === false && this.moduleId)) {
-        this.isEnabled = true;
-        events.trigger('enableLayer', { data: { index: this.index } });
-        this.enableNode.setAttribute('disabled', true);
-        this.disableNode.removeAttribute('disabled');
-        this.enabledIndicator.classList.add('is-enabled');
+    selectAnimation () {
+      if (!('_selectedAnimationToLoad' in this)) {
+        return;
       }
+      const { specifier } = this._selectedAnimationToLoad;
+      this.isEnabled = false;
+      this.moduleSpecifier = specifier;
+
+      this.nodes.form.dispatchEvent(new Event('submit'));
+      events.trigger('loadedAnimationIntoLayer');
     }
 
-    disable(forced = false) {
-      if (forced || (this.isEnabled === true && this.moduleId)) {
-        this.isEnabled = false;
-        events.trigger('disableLayer', { data: { index: this.index } });
-        this.enableNode.removeAttribute('disabled');
-        this.disableNode.setAttribute('disabled', true);
-        this.enabledIndicator.classList.remove('is-enabled');
-      }
+    clear () {
+      this.isEnabled = false;
+      this.nodes.propertiesTable.setAttribute('hidden', '');
+      this.nodes.propertiesBody.innerHTML = '';
+      events.trigger('clearLayer', { data: { index: this.index } });
+      events.trigger('disableMidiLayerToggle', { data: { index: this.index } });
+      this.moduleSpecifier = undefined;
+
+      this.storeProperties();
     }
 
     toggleIsEnabled() {
-      if (this.isEnabled) {
-        this.disable();
-      } else {
-        this.enable();
-      }
+      this.isEnabled = !this.isEnabled;
+      this.storeProperties();
     }
 
     getLayerProperties() {
-      if (this.moduleId) {
-        return Object.assign({ isEnabled: this.isEnabled }, getFormValues(this.formNode));
+      const { isEnabled, moduleSpecifier } = this;
+      if (moduleSpecifier) {
+        return Object.assign({ isEnabled, moduleSpecifier }, getFormValues(this.nodes.form));
       }
     }
 
     setLayerProperties(args) {
       if (args) {
-        const { moduleId } = args;
-        this.preSelected = moduleId;
-        this.preEnabled = args.isEnabled;
+        this.moduleSpecifier = args.moduleSpecifier;
+        delete args.moduleSpecifier;
+
+        this.isEnabled = args.isEnabled;
         delete args.isEnabled;
-        delete args.moduleId;
+
         this.preSelectedValues = args;
       }
     }
 
     setClientLayerProperties() {
-      // this.moduleId = null;
       const { isEnabled } = this;
       this.justLoadAnyway = true;
-      this.formNode.dispatchEvent(new Event('submit'));
+      this.nodes.form.dispatchEvent(new Event('submit'));
 
       setTimeout(() => {
-        if (isEnabled) {
-          this.enable(true);
-        } else {
-          this.disable(true);
-        }
+        this.isEnabled = isEnabled;
       }, 1000);
     }
 
@@ -93,30 +149,19 @@ window.customElements.define(
       this._domIitialised = true;
 
       this.appendChild(content.cloneNode(true));
+      this.isEnabled = false;
 
-      this.enabledIndicator = this.querySelector('[data-selector=enabledIndicator]');
-      this.enableNode = this.querySelector('[data-action=enable]');
-      this.enableNode.addEventListener('click', e => {
-        e.preventDefault();
-        this.enable();
-      });
-      this.disableNode = this.querySelector('[data-action=disable]');
-      this.disableNode.addEventListener('click', e => {
-        e.preventDefault();
-        this.disable();
-      });
+      this.actions.toggleEnabled.isOn = false;
+      this.actions.toggleEnabled.handler = enabled => {
+        this.isEnabled = enabled;
+        this.storeProperties();
+      };
+      this.actions.toggleEnabled.setAttribute('disabled', '');
 
-      this.disable(true);
+      this.actions.clear.addEventListener('click', this.clear.bind(this));
+      this.actions.load.addEventListener('click', this.selectAnimation.bind(this));
 
-      this.animationSelectNode = this.querySelector('[name=moduleId]');
-      events.listen('allAnimationData', data => {
-        populateAnimationsDropDown.call(this, data);
-      });
-
-      this.parameterNode = this.querySelector('[data-selector=properties]');
-      this.propertiesTable = this.parameterNode.querySelector('table');
-      this.parameterBodyNode = this.querySelector('[data-selector=propertiesBody]');
-      this.parameterBodyNode.addEventListener(
+      this.nodes.propertiesBody.addEventListener(
         'click',
         ({ target }) => {
           if (target.nodeName === 'BUTTON') {
@@ -127,17 +172,28 @@ window.customElements.define(
         false
       );
 
-      this.propertiesTable.setAttribute('hidden', '');
-      // this.parameterNode.classList.add('hidden');
+      this.nodes.propertiesTable.setAttribute('hidden', '');
+      this.nodes.form.addEventListener('submit', submit.bind(this));
 
-      this.formNode = this.querySelector('form');
-      this.formNode.addEventListener('submit', submit.bind(this));
+      this.restoreProperties();
+    }
 
+    storeProperties() {
+      const layerProperties = this.getLayerProperties();
+
+      if (layerProperties) {
+        localStorage.setItem(`layerProperties-${this.index}`, JSON.stringify(layerProperties));
+      } else {
+        localStorage.removeItem(`layerProperties-${this.index}`);
+      }
+    }
+
+    restoreProperties() {
       const stored = JSON.parse(localStorage.getItem(`layerProperties-${this.index}`));
-      this.setLayerProperties(stored);
-      setTimeout(() => {
+      if (stored) {
+        this.setLayerProperties(stored);
         this.setClientLayerProperties();
-      }, 1000);
+      }
     }
 
     disconnectedCallback() {
@@ -145,37 +201,24 @@ window.customElements.define(
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-      console.log(name, oldValue, newValue);
       this.index = parseInt(newValue, 10);
     }
 
-    adoptedCallback() {
-      console.log('adopted!');
-    }
+    adoptedCallback() {}
   }
 );
 
 function submit(e) {
   e.preventDefault();
 
-  const { justLoadAnyway } = this;
+  const { moduleSpecifier, justLoadAnyway } = this;
   delete this.justLoadAnyway;
 
   const values = getFormValues(e.target);
 
-  const { moduleId } = values;
-  delete values.moduleId;
-
-  if (!moduleId) {
-    this.disable(true);
-    this.propertiesTable.setAttribute('hidden', '');
-    this.parameterBodyNode.innerHTML = '';
-    events.trigger('clearLayer', { data: { index: this.index } });
-    events.trigger('disableLayerToggle', { data: { index: this.index } });
-    this.moduleId = null;
-  } else if ((moduleId && moduleId !== this.moduleId) || justLoadAnyway) {
-    this.moduleId = moduleId;
-    events.trigger('enableLayerToggle', { data: { index: this.index } });
+ if ((this._moduleSpecifierChanged && moduleSpecifier) || justLoadAnyway) {
+    this._moduleSpecifierChanged = false;
+    events.trigger('enableMidiLayerToggle', { data: { index: this.index } });
 
     if (!this.preSelectedValues) {
       this.preSelectedValues = values;
@@ -183,10 +226,10 @@ function submit(e) {
 
     // load the module and invoke it and load the animations to get the properties
     // match them and add them as a placeholder to indicate default values
-    import(moduleId)
+    import(moduleSpecifier)
       .then(mod => [new mod.default(), mod])
       .then(([invoked, { properties }]) => {
-        this.parameterBodyNode.innerHTML = properties
+        this.nodes.propertiesBody.innerHTML = properties
           .map(v => {
             if (v === 'color') {
               return `<tr><td colspan=2>
@@ -195,29 +238,32 @@ function submit(e) {
             }
             const t = propertyTypes[v];
             return `<tr><td>${v}</td>
-              <td><input placeholder="${invoked[v]}" type=number min="${
-              t.min
-            }" max="${t.max}" autocomplete=off step="${
+              <td><input placeholder="${invoked[v]}" type=number min="${t.min}" max="${
+              t.max
+            }" autocomplete=off step="${
               t.step
             }" name="${v}" /><button type=button tabindex="-1"><</button></td></tr>`;
           })
           .join('');
-        this.propertiesTable.removeAttribute('hidden');
+        this.nodes.propertiesTable.removeAttribute('hidden');
 
         if (this.preSelectedValues) {
           Object.keys(this.preSelectedValues).forEach(property => {
-            this.parameterBodyNode.querySelector(
-              `[name=${property}`
-            ).value = this.preSelectedValues[property];
+            const input = this.nodes.propertiesBody.querySelector(`[name=${property}`);
+            if (input) {
+              input.value = this.preSelectedValues[property];
+            }
           });
           delete this.preSelectedValues;
         }
+
+        this.storeProperties();
 
         // send the loadAnimation to the clients
         events.trigger('loadAnimation', {
           data: {
             index: this.index,
-            moduleId,
+            moduleSpecifier,
             properties: values
           }
         });
@@ -230,43 +276,37 @@ function submit(e) {
         properties: values
       }
     });
-  }
-
-  const layerProperties = this.getLayerProperties();
-  if (layerProperties) {
-    localStorage.setItem(`layerProperties-${this.index}`, JSON.stringify(layerProperties));
-  } else {
-    localStorage.removeItem(`layerProperties-${this.index}`);
+    this.storeProperties();
   }
 }
 
-function replaceFirstOptionText({ target }) {
-  target.firstChild.textContent = 'no animation';
-  target.removeEventListener('change', replaceFirstOptionText);
-}
+// function replaceFirstOptionText({ target }) {
+//   target.firstChild.textContent = 'no animation';
+//   target.removeEventListener('change', replaceFirstOptionText);
+// }
 
-function populateAnimationsDropDown(animations) {
-  const { value } = this.animationSelectNode;
-  const { preSelected } = this;
-  const selectedValue = preSelected || value;
+// function populateAnimationsDropDown(animations) {
+//   const { value } = this.animationSelectNode;
+//   const { preSelected } = this;
+//   const selectedValue = preSelected || value;
 
-  this.animationSelectNode.innerHTML = ['<option value="">select animation</option>']
-    .concat(
-      animations.map(
-        v =>
-          `<option value="${v.path}" ${v.path === selectedValue ? 'selected' : ''}>${
-            v.name
-          }</option>`
-      )
-    )
-    .join('');
-  if (preSelected) {
-    this.formNode.dispatchEvent(new Event('submit'));
-    if (this.preEnabled) {
-      this.enable(true);
-    }
-    delete this.preSelected;
-    delete this.preEnabled;
-  }
-  this.animationSelectNode.addEventListener('change', replaceFirstOptionText);
-}
+//   this.animationSelectNode.innerHTML = ['<option value="">select animation</option>']
+//     .concat(
+//       animations.map(
+//         v =>
+//           `<option value="${v.specifier}" ${v.specifier === selectedValue ? 'selected' : ''}>${
+//             v.name
+//           }</option>`
+//       )
+//     )
+//     .join('');
+//   if (preSelected) {
+//     this.nodes.form.dispatchEvent(new Event('submit'));
+//     if (this.preEnabled) {
+//       this.enable(true);
+//     }
+//     delete this.preSelected;
+//     delete this.preEnabled;
+//   }
+//   this.animationSelectNode.addEventListener('change', replaceFirstOptionText);
+// }

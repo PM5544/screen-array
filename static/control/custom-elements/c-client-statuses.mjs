@@ -1,4 +1,5 @@
 import { control } from '../socket.mjs';
+
 const styleContent = `
 :host {
   display: flex;
@@ -24,13 +25,13 @@ window.customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
-      this._shadowRoot = this.attachShadow({ mode: 'open' });
+      this.attachShadow({ mode: 'open' });
 
       const styles = document.createElement('style');
       styles.textContent = styleContent;
-      this._shadowRoot.appendChild(styles);
+      this.shadowRoot.appendChild(styles);
 
-      this.addEventListener('click', ({ target }) => {
+      this.shadowRoot.addEventListener('click', ({ target }) => {
         const { id } = target.dataset;
         if (id) {
           control.emit('identify', {
@@ -38,20 +39,24 @@ window.customElements.define(
             id,
             data: { id: id.replace('/clients#', '') }
           });
+        } else {
+          control.emit('sendAllClientIds');
         }
       });
 
       control.on('allClientIds', data => {
-        // console.log(data);
-        while (this.childNodes.length) {
-          this.removeChild(this.firstChild);
-        }
+        console.log(data);
+
+        Array.from(this.shadowRoot.querySelectorAll('div')).forEach(n => {
+          n.parentNode.removeChild(n);
+        });
+
         ['left', 'right'].forEach(side => {
           data[side].forEach(id => {
             const clientIndicator = document.createElement('div');
             clientIndicator.className = side;
             clientIndicator.dataset.id = id;
-            this.appendChild(clientIndicator);
+            this.shadowRoot.appendChild(clientIndicator);
           });
         });
       });
