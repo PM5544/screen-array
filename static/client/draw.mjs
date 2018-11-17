@@ -1,5 +1,5 @@
 import { layers, flashLayer } from './layers.mjs';
-import { clear, ctx, dimensions } from './canvas.mjs';
+import { clear, ctx } from './canvas.mjs';
 
 let drawing = true;
 const audioLevels = {
@@ -15,10 +15,10 @@ function drawFrame() {
 
   if (drawing) {
     layers.forEach(l => {
-      l.render(ctx, dimensions, audioLevels);
+      l.render(ctx, audioLevels);
     });
 
-    flashLayer.render(ctx, dimensions, audioLevels);
+    flashLayer.render(ctx);
 
     window.requestAnimationFrame(drawFrame);
   }

@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 export const name = 'audioLinesVertical';
 export const tags = ['audio', 'simple', 'singleColor'];
 export const properties = ['color', 'opacity', 'barWidth'];
@@ -17,8 +19,8 @@ export default class {
     return this.opacity;
   }
 
-  constructor(position) {
-    this.position = position;
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
   }
 
@@ -32,28 +34,18 @@ export default class {
 
   restart() {}
 
-  render(ctx, dimension, {spectrum = false}) {
+  render(ctx, {spectrum = false}) {
     if (!spectrum) {
       return;
     }
 
-    const { width, height } = dimension;
-    const {
-      r,
-      g,
-      b,
-      opacity,
-      barWidth,
-      position: { index, total = 1, mirrored = false }
-    } = this;
-
-    const barsToShow = Math.floor(spectrum.length / total);
-    const selectedLevels = spectrum.slice(index * barsToShow, (index + 1) * barsToShow);
-    const sectionWidth = Math.floor(width / selectedLevels.length);
-    const lineCount = Math.round(sectionWidth / barWidth);
+    const barsToShow = Math.floor(spectrum.length / this.clientCountOnSide);
+    const selectedLevels = spectrum.slice(this.clientIndexOnSide * barsToShow, (this.clientIndexOnSide + 1) * barsToShow);
+    const sectionWidth = Math.floor(this.width / selectedLevels.length);
+    const lineCount = Math.round(sectionWidth / this.barWidth);
     const maxWidth = sectionWidth / lineCount;
 
-    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
 
     // console.log(selectedLevels);
     let x = maxWidth / 2;
@@ -61,7 +53,7 @@ export default class {
       const w = (maxWidth / 100) * v;
       let counter = lineCount;
       while(counter){
-        new Line({ ctx, x, h: height, w });
+        new Line({ ctx, x, h: this.height, w });
         counter--;
         x += maxWidth;
       }

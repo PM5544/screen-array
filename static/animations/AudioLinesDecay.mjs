@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 export const name = 'audioLinesDecay';
 export const tags = ['audio', 'simple', 'singleColor'];
 export const properties = ['color', 'count', 'opacity'];
@@ -11,8 +13,8 @@ export default class {
     return this.opacity;
   }
 
-  constructor(position) {
-    this.position = position;
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
   }
 
@@ -27,28 +29,16 @@ export default class {
 
   restart() {}
 
-  render(ctx, dimension, {spectrum = false}) {
+  render(ctx, {spectrum = false}) {
     if (!spectrum) {
       return;
     }
 
-    const { width, height } = dimension;
-    const {
-      r,
-      g,
-      b,
-      opacity,
-      // lineWidth,
-      // x,
-      // offset,
-      position: { index, total = 1, mirrored = false }
-    } = this;
-
-    const barsToShow = Math.floor(spectrum.length / total);
-    const selectedLevels = spectrum.slice(index * barsToShow, (index + 1) * barsToShow);
-    const barWidth = Math.floor(width / selectedLevels.length);
+    const barsToShow = Math.floor(spectrum.length / this.clientCountOnSide);
+    const selectedLevels = spectrum.slice(this.clientIndexOnSide * barsToShow, (this.clientIndexOnSide + 1) * barsToShow);
+    const barWidth = Math.floor(this.width / selectedLevels.length);
     const halfBarWIdth = barWidth / 2;
-    const one = height / 100;
+    const one = this.height / 100;
 
     const { history } = this;
 
@@ -56,13 +46,13 @@ export default class {
       if (!history[i]) {
         history[i] = [];
       }
-      history[i].unshift(height - v * one);
+      history[i].unshift(this.height - v * one);
       if (history[i].length > this.count) {
         history[i].pop();
       }
     });
 
-    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
     ctx.lineWidth = this.lineWidth;
 
     history.forEach((bar, barIndex) => {

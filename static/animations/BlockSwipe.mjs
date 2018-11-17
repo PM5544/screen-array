@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 export const name = 'block swipe';
 export const tags = ['simple', 'block', 'singleColor'];
 export const properties = ['color', 'frameCount', 'opacity'];
@@ -11,7 +13,8 @@ export default class {
     return this.opacity;
   }
 
-  constructor() {
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
   }
 
@@ -28,29 +31,27 @@ export default class {
     this.frame = 0;
   }
 
-  render(ctx, dimension) {
+  render(ctx) {
     if (this.frame < this.frameCount) {
-      const { width, height } = dimension;
-      const { r, g, b, opacity } = this;
       const halfCount = Math.floor(this.frameCount / 2);
 
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+      ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
 
       let left;
       if (this.frame > halfCount) {
-        left = width * ((this.frame - halfCount) / halfCount);
+        left = this.width * ((this.frame - halfCount) / halfCount);
       } else {
         left = 0;
       }
 
       let _width;
       if (this.frame < halfCount) {
-        _width = width * this.frame / halfCount;
+        _width = this.width * this.frame / halfCount;
       } else {
-        _width = width;
+        _width = this.width;
       }
 
-      ctx.fillRect(left, 0, _width, height);
+      ctx.fillRect(left, 0, _width, this.height);
 
       this.frame++;
     }

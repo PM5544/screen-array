@@ -3,6 +3,7 @@ import * as events from '../events.mjs';
 import allAnimations from '../animations.mjs';
 import './c-animation-preview.mjs';
 import './c-toggle-button.mjs';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../constants.mjs';
 
 const styleContent = `
 * {
@@ -23,22 +24,22 @@ button {
   cursor: pointer;
 }
 .tags {
-  padding: .3rem;
+  padding: var(--padding) 0;
+  border-bottom: 1px solid var(--border-color);
 }
 .tags > button + button{
-  margin-left: .5rem;
+  margin-left: var(--padding);
 }
 .animations {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-auto-rows: min-content;
+  grid-gap: calc(var(--padding) * 2);
   overflow-y: auto;
 }
 .animations > div {
-  width: 11rem;
-  padding: .5rem;
   cursor: pointer;
+  height: auto;
 }
 .animations > div * {
   pointer-events: none;
@@ -46,11 +47,13 @@ button {
 .name {
   font-size: var(--font-size);
   color: var(--font-color);
-  line-height: calc(var(--font-size) + .5rem);
+  line-height: calc(var(--font-size) + 1rem);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 canvas {
-  width: 160px;
-  height: 120px;
+  width: 100%;
   border: 1px solid var(--border-color);
 }
 `;
@@ -125,6 +128,8 @@ window.customElements.define(
 
         const canvas = document.createElement('canvas', { is: 'c-animation-preview' });
         canvas.setAttribute('specifier', specifier);
+        canvas.width = SCREEN_WIDTH * 40;
+        canvas.height = SCREEN_HEIGHT * 40;
         a.appendChild(canvas);
 
         this.animations.appendChild(a);

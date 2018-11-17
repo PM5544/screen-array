@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 const circleEnd = Math.PI * 2;
 
 export const name = 'audioDotsGrid';
@@ -21,8 +23,8 @@ export default class {
     return this.opacity;
   }
 
-  constructor(position) {
-    this.position = position;
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
   }
 
@@ -35,26 +37,18 @@ export default class {
 
   restart() {}
 
-  render(ctx, dimension, {spectrum = false}) {
+  render(ctx, {spectrum = false}) {
     if (!spectrum) {
       return;
     }
 
-    const { width, height } = dimension;
-    const {
-      r,
-      g,
-      b,
-      opacity,
-      position: { index, total = 1, mirrored = false }
-    } = this;
 
-    const barsToShow = Math.floor(spectrum.length / total);
-    const selectedLevels = spectrum.slice(index * barsToShow, (index + 1) * barsToShow);
-    const barWidth = Math.floor(width / selectedLevels.length);
-    const one = height / 100;
+    const barsToShow = Math.floor(spectrum.length / this.clientCountOnSide);
+    const selectedLevels = spectrum.slice(this.clientIndexOnSide * barsToShow, (this.clientIndexOnSide + 1) * barsToShow);
+    const barWidth = Math.floor(this.width / selectedLevels.length);
+    const one = this.height / 100;
 
-    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
 
     // console.log(selectedLevels);
 
@@ -71,7 +65,7 @@ export default class {
             radius += 3;
           }
         }
-        new Dot({ ctx, x, y: height - 5 - limit * one, radius });
+        new Dot({ ctx, x, y: this.height - 5 - limit * one, radius });
         limit -= 5;
       }
     });

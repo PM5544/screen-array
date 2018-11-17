@@ -10,8 +10,7 @@ export const dimensions = {
   width: WIDTH,
   height: HEIGHT,
   centerX: WIDTH / 2,
-  centerY: HEIGHT / 2,
-  position: {}
+  centerY: HEIGHT / 2
 };
 
 export function clear() {

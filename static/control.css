@@ -175,6 +175,9 @@ c-flash-layer th {
   font-size: var(--font-size);
   color: var(--font-color);
   padding: var(--padding);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .tab-switcher {
   display: flex;

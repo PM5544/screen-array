@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 export const name = 'audioLines';
 export const tags = ['audio', 'simple', 'singleColor'];
 export const properties = ['color', 'lineWidth', 'opacity'];
@@ -11,8 +13,8 @@ export default class {
     return this.opacity;
   }
 
-  constructor(position) {
-    this.position = position;
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
   }
 
@@ -26,31 +28,21 @@ export default class {
 
   restart() {}
 
-  render(ctx, dimension, {spectrum = false}) {
+  render(ctx, {spectrum = false}) {
     if (!spectrum) {
       return;
     }
 
-    const { width, height } = dimension;
-    const {
-      r,
-      g,
-      b,
-      opacity,
-      lineWidth,
-      position: { index, total = 1 }
-    } = this;
+    const barsToShow = Math.floor(spectrum.length / this.clientCountOnSide);
+    const selectedLevels = spectrum.slice(this.clientIndexOnSide * barsToShow, (this.clientIndexOnSide + 1) * barsToShow);
+    const barWidth = Math.floor(this.width / selectedLevels.length);
+    const one = this.height / 100;
 
-    const barsToShow = Math.floor(spectrum.length / total);
-    const selectedLevels = spectrum.slice(index * barsToShow, (index + 1) * barsToShow);
-    const barWidth = Math.floor(width / selectedLevels.length);
-    const one = height / 100;
-
-    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
+    ctx.lineWidth = this.lineWidth;
 
     selectedLevels.forEach((v, i) => {
-      const h = height - v * one;
+      const h = this.height - v * one;
       ctx.beginPath();
       ctx.moveTo(i * barWidth, h);
       ctx.lineTo((i + 1) * barWidth, h);

@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 export const name = 'spining line';
 export const tags = ['simple', 'singleColor'];
 export const properties = ['color', 'radius', 'lineWidth', 'opacity', 'velocity'];
@@ -11,7 +13,8 @@ export default class {
     return this.opacity;
   }
 
-  constructor() {
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
   }
 
@@ -30,21 +33,19 @@ export default class {
     this.radian = 0;
   }
 
-  render(ctx, dimension) {
-    const { centerX, centerY } = dimension;
-    const { r, g, b, opacity } = this;
+  render(ctx) {
 
-    ctx.strokeStyle = `rgba(${r},${g},${b},${opacity}`;
+    ctx.strokeStyle = `rgba(${this.r},${this.g},${this.b},${this.opacity}`;
     ctx.lineWidth = this.lineWidth;
     ctx.beginPath();
 
     ctx.moveTo(
-      centerX - Math.cos(this.radian) * this.radius,
-      centerY - Math.sin(this.radian) * this.radius
+      this.centerX - Math.cos(this.radian) * this.radius,
+      this.centerY - Math.sin(this.radian) * this.radius
     );
     ctx.lineTo(
-      centerX + Math.cos(this.radian) * this.radius,
-      centerY + Math.sin(this.radian) * this.radius
+      this.centerX + Math.cos(this.radian) * this.radius,
+      this.centerY + Math.sin(this.radian) * this.radius
     );
     ctx.stroke();
 

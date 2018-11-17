@@ -1,4 +1,4 @@
-// import dynamicImport from './dynamicImport.mjs';
+import { dimensions }from './canvas.mjs';
 
 export default class Layer {
   constructor(options = {}) {
@@ -7,7 +7,10 @@ export default class Layer {
     this.animation;
     this.disable();
 
-    this.clientPosition = {};
+    this.animationConstructorData = {
+      position: {},
+      dimensions
+    };
 
     if ('undefined' !== typeof index) {
       this.index = index;
@@ -33,7 +36,7 @@ export default class Layer {
     if (moduleSpecifier) {
       this.disable();
       import(moduleSpecifier).then(mod => {
-        this.animation = new mod.default(this.clientPosition);
+        this.animation = new mod.default(this.animationConstructorData);
         this.setProperties(properties);
       });
     }
@@ -73,13 +76,12 @@ export default class Layer {
   }
 
   setClientPosition(args) {
-    // console.log(args);
-    this.clientPosition = args;
+    this.animationConstructorData.position = args;
   }
 
-  render(ctx, screen, audioInfo) {
+  render(ctx, audioInfo) {
     if (this.isEnabled && this.animation) {
-      this.animation.render(ctx, screen, audioInfo);
+      this.animation.render(ctx, audioInfo);
     }
   }
 }

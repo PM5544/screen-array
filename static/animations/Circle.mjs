@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 const circleEnd = Math.PI * 2;
 
 export const name = 'circle medium';
@@ -13,7 +15,9 @@ export default class {
     return this.frameCount;
   }
 
-  constructor() {
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
+
     this.frame = 0;
     this.reset();
   }
@@ -33,18 +37,15 @@ export default class {
     this.frame = 0;
   }
 
-  render(ctx, dimension) {
+  render(ctx) {
     if (this.frame === this.stopFrame) {
       return;
     } else if (this.frame < this.frameCount) {
-      const { centerX, centerY } = dimension;
-      const { r, g, b, opacity } = this;
-
-      ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+      ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
       ctx.lineWidth = this.lineWidth;
 
       ctx.beginPath();
-      ctx.arc(centerX, centerY, this.frame / this.frameCount * this.maxRadius, 0, circleEnd);
+      ctx.arc(this.centerX, this.centerY, this.frame / this.frameCount * this.maxRadius, 0, circleEnd);
       ctx.stroke();
 
       this.frame++;

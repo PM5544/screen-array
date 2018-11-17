@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 export const name = 'wide';
 export const tags = ['simple', 'singleColor'];
 export const properties = ['color', 'lineWidth', 'opacity'];
@@ -11,8 +13,8 @@ export default class {
     return this.opacity;
   }
 
-  constructor(position) {
-    this.position = position;
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
   }
 
@@ -28,28 +30,20 @@ export default class {
     // this.frame = 0;
   }
 
-  render(ctx, dimension) {
-    const { width, height } = dimension;
-    const {
-      r,
-      g,
-      b,
-      opacity,
-      position: { index, total, mirrored }
-    } = this;
+  render(ctx, ) {
 
-    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
     ctx.lineWidth = this.lineWidth;
-    ctx.translate(-(index * width), 0);
+    ctx.translate(-(this.clientIndexOnSide * this.width), 0);
     ctx.beginPath();
-    if (mirrored) {
+    if (this.clientIsMirrored) {
       ctx.moveTo(0, 0);
-      ctx.lineTo(total * width, height);
+      ctx.lineTo(this.clientCountOnSide * this.width, this.height);
     } else {
-      ctx.moveTo(total * width, 0);
-      ctx.lineTo(0, height);
+      ctx.moveTo(this.clientCountOnSide * this.width, 0);
+      ctx.lineTo(0, this.height);
     }
     ctx.stroke();
-    ctx.translate(index * width, 0);
+    ctx.translate(this.clientIndexOnSide * this.width, 0);
   }
 }

@@ -25,6 +25,7 @@ window.customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
+
       this.attachShadow({ mode: 'open' });
 
       const styles = document.createElement('style');
@@ -45,9 +46,7 @@ window.customElements.define(
       });
 
       control.on('allClientIds', data => {
-        console.log(data);
-
-        Array.from(this.shadowRoot.querySelectorAll('div')).forEach(n => {
+        Array.from(this.shadowRoot.querySelectorAll('div')).map(n => {
           n.parentNode.removeChild(n);
         });
 

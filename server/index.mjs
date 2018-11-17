@@ -66,7 +66,7 @@ controlServer.on('connection', function(co) {
         sendToSockets('setClientPosition', {
           targets: 'byId',
           id: socketId,
-          data: { index, total: ar.length, mirrored: true }
+          data: { clientIndexOnSide: index, clientCountOnSide: ar.length, clientIsMirrored: true }
         });
       });
       registeredSockets.socketsRightValues.forEach((socketId, index, ar) => {
@@ -74,7 +74,7 @@ controlServer.on('connection', function(co) {
         sendToSockets('setClientPosition', {
           targets: 'byId',
           id: socketId,
-          data: { index, total: ar.length, mirrored: false }
+          data: { clientIndexOnSide: index, clientCountOnSide: ar.length, clientIsMirrored: false }
         });
       });
     });

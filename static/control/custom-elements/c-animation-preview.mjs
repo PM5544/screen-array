@@ -1,3 +1,7 @@
+import { SCREEN_PROPORTION, SCREEN_WIDTH } from '../../constants.mjs';
+
+const spectrum = [20, 30, 20, 10, 15, 7, 8, 12, 24, 56, 27, 82];
+
 window.customElements.define(
   'c-animation-preview',
   class extends HTMLCanvasElement {
@@ -5,20 +9,14 @@ window.customElements.define(
       return ['specifier'];
     }
 
-    constructor() {
-      super();
-
-      this.spectrum = [20, 30, 20, 10, 15, 7, 8, 12, 24, 56, 27, 82];
-    }
-
     load() {
       import(this.specifier).then(A => {
         this.animation = new A.default({
           index: 1,
           total: 3,
-          mirrored: false
+          clientIsMirrored: false
         });
-        this.animation.render(this.ctx, this.dimensions, { spectrum: this.spectrum });
+        this.animation.render(this.ctx, this.dimensions, { spectrum });
       });
     }
 
@@ -29,8 +27,10 @@ window.customElements.define(
 
     connectedCallback() {
       this.ctx = this.getContext('2d', { alpha: false });
-      const w = this.offsetWidth;
-      const h = this.offsetHeight;
+      const measuredWidth = this.offsetWidth;
+      const w = measuredWidth - (measuredWidth % SCREEN_WIDTH);
+      const h = w * SCREEN_PROPORTION;
+
       this.dimensions = {
         width: w,
         height: h,
@@ -40,9 +40,6 @@ window.customElements.define(
       this.width = w;
       this.height = h;
     }
-
-    disconnectedCallback() {}
-    adoptedCallback() {}
   },
   { extends: 'canvas' }
 );

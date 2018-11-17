@@ -1,4 +1,6 @@
-export const name = 'audioBar';
+import * as animationUtils from '../utils/animation.mjs';
+
+export const name = 'audioLineGraph';
 export const tags = ['audio', 'simple', 'singleColor'];
 export const properties = ['color', 'lineWidth', 'opacity'];
 
@@ -11,8 +13,8 @@ export default class {
     return this.opacity;
   }
 
-  constructor(position) {
-    this.position = position;
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
   }
 
@@ -28,32 +30,20 @@ export default class {
 
   restart() {}
 
-  render(ctx, dimension, {spectrum = false}) {
+  render(ctx, {spectrum = false}) {
     if (!spectrum) {
       return;
     }
 
-    const { width, height } = dimension;
-    const {
-      r,
-      g,
-      b,
-      opacity,
-      // lineWidth,
-      // x,
-      // offset,
-      position: { /* index, total = 1,  mirrored = false */ }
-    } = this;
+    const size = this.width / spectrum.length;
+    const one = this.height / 100;
 
-    const size = width / spectrum.length;
-    const one = height / 100;
-
-    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
     ctx.lineWidth = this.lineWidth;
 
     ctx.beginPath();
     spectrum.forEach((v, i) => {
-      ctx.lineTo(i * size, height - (v * one));
+      ctx.lineTo(i * size, this.height - (v * one));
     });
 
     ctx.stroke();

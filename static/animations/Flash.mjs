@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 export const name = 'flash';
 export const tags = ['simple', 'singleColor'];
 export const properties = ['color', 'opacity'];
@@ -11,7 +13,8 @@ export default class {
     return this.opacity;
   }
 
-  constructor() {
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
   }
 
@@ -24,12 +27,10 @@ export default class {
 
   restart() {}
 
-  render(ctx, dimension) {
-    const { width, height } = dimension;
-    const { r, g, b, opacity } = this;
+  render(ctx) {
 
-    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
 
-    ctx.fillRect(0, 0, width, height);
+    ctx.fillRect(0, 0, this.width, this.height);
   }
 }

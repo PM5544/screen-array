@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 export const name = 'curve';
 export const tags = ['simple', 'singleColor'];
 export const properties = ['color', 'height', 'stepSize', 'lineWidth', 'opacity'];
@@ -11,7 +13,8 @@ export default class {
     return this.opacity;
   }
 
-  constructor() {
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
   }
 
@@ -30,47 +33,45 @@ export default class {
     this.offset = 0;
   }
 
-  render(ctx, dimension) {
-    const { foregroundColor, centerX, centerY, width } = dimension;
-    const { r, g, b, opacity, offset } = this;
-    const partX = width / 2;
+  render(ctx) {
+    const partX = this.width / 2;
 
-    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
     ctx.lineWidth = this.lineWidth;
 
     // ctx.moveTo(this.offSet - width, centerY);
     ctx.beginPath();
-    ctx.moveTo(offset - width, centerY);
+    ctx.moveTo(this.offset - this.width, this.centerY);
 
     ctx.bezierCurveTo(
-      -offset - width + partX,
-      centerY - this.height,
-      -offset - partX,
-      centerY + this.height,
-      -offset,
-      centerY
+      -this.offset - this.width + partX,
+      this.centerY - this.height,
+      -this.offset - partX,
+      this.centerY + this.height,
+      -this.offset,
+      this.centerY
     );
     ctx.bezierCurveTo(
-      -offset + partX,
-      centerY - this.height,
-      -offset + width - partX,
-      centerY + this.height,
-      -offset + width,
-      centerY
+      -this.offset + partX,
+      this.centerY - this.height,
+      -this.offset + this.width - partX,
+      this.centerY + this.height,
+      -this.offset + this.width,
+      this.centerY
     );
     ctx.bezierCurveTo(
-      -offset + width + partX,
-      centerY - this.height,
-      -offset + width + width - partX,
-      centerY + this.height,
-      -offset + width + width,
-      centerY
+      -this.offset + this.width + partX,
+      this.centerY - this.height,
+      -this.offset + this.width + this.width - partX,
+      this.centerY + this.height,
+      -this.offset + this.width + this.width,
+      this.centerY
     );
     ctx.stroke();
 
     this.offset += this.stepSize;
-    if (this.offset > width) {
-      this.offset -= width;
+    if (this.offset > this.width) {
+      this.offset -= this.width;
     }
   }
 }

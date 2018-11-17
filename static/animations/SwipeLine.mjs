@@ -1,3 +1,5 @@
+import * as animationUtils from '../utils/animation.mjs';
+
 const circleEnd = Math.PI * 2;
 
 export const name = 'swipe line';
@@ -13,8 +15,8 @@ export default class {
     return this.frameCount;
   }
 
-  constructor(position) {
-    this.position = position;
+  constructor(...args) {
+    animationUtils.extend.call(this, args);
     this.reset();
     this.frame = this.stopFrame;
   }
@@ -34,35 +36,27 @@ export default class {
     this.frame = 0;
   }
 
-  render(ctx, dimension) {
+  render(ctx) {
     if (this.frame === this.stopFrame) {
       return;
     } else if (this.frame < this.frameCount) {
-      const { width, height, centerY } = dimension;
-      const {
-        r,
-        g,
-        b,
-        opacity,
-        position: { index, total, mirrored }
-      } = this;
 
-      ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+      ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
       ctx.lineWidth = this.lineWidth;
 
-      ctx.translate(-(index * width), 0);
+      ctx.translate(-(this.clientIndexOnSide * this.width), 0);
 
       ctx.beginPath();
       ctx.arc(
-        mirrored ? total * width : 0,
-        centerY,
-        this.frame / this.frameCount * (total * width),
+        this.clientIsMirrored ? this.clientCountOnSide * this.width : 0,
+        this.centerY,
+        this.frame / this.frameCount * (this.clientCountOnSide * this.width),
         0,
         circleEnd
       );
       ctx.stroke();
 
-      ctx.translate(index * width, 0);
+      ctx.translate(this.clientIndexOnSide * this.width, 0);
 
       this.frame++;
     } else {

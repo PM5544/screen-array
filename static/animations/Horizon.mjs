@@ -1,8 +1,6 @@
 import * as animationUtils from '../utils/animation.mjs';
 
-const lineGapX = 750;
-
-export const name = 'landscape';
+export const name = 'horizon';
 export const tags = ['simple', 'singleColor'];
 export const properties = ['color', 'lineWidth', 'opacity'];
 
@@ -17,6 +15,10 @@ export default class {
 
   constructor(...args) {
     animationUtils.extend.call(this, args);
+
+    // clientIndexOnSide
+    // clientCountOnSide
+    this.clientCountOnSideWidth = this.clientCountOnSide * this.width;
     this.reset();
   }
 
@@ -36,10 +38,8 @@ export default class {
 
   render(ctx) {
 
-    const fullWidth = this.clientCountOnSide * this.width;
-
     let lineGapY = 2;
-    let lineY = Math.round(this.height * 0.5);
+    let lineY = this.centerY;
     const horizonY = lineY;
 
     if (this.clientCountOnSide) {
@@ -49,7 +49,7 @@ export default class {
     ctx.beginPath();
     ctx.lineWidth = this.lineWidth;
 
-    const focalPoint = Math.round(fullWidth / 2);
+    const focalPoint = Math.round(this.clientCountOnSideWidth / 2);
 
     let drawing = true;
     let xDif = 0;
@@ -105,7 +105,7 @@ export default class {
       //   horizontalColor += 60;
       // }
       ctx.moveTo(0, lineY);
-      ctx.lineTo(fullWidth, lineY);
+      ctx.lineTo(this.clientCountOnSideWidth, lineY);
       lineY = Math.round(lineY + lineGapY);
       lineGapY = lineGapY * 1.25;
     }
@@ -134,7 +134,7 @@ export default class {
     //   ctx.lineTo(0, height);
     // }
     // ctx.stroke();
-    if (this.clientCountOnSide) {
+    if (this.clientCountOnSideWidth) {
       ctx.translate(this.clientIndexOnSide * this.width, 0);
     }
   }
