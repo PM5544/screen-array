@@ -1,4 +1,4 @@
-import { dimensions }from './canvas.mjs';
+import { dimensions } from './canvas.mjs';
 
 export default class Layer {
   constructor(options = {}) {
@@ -7,10 +7,7 @@ export default class Layer {
     this.animation;
     this.disable();
 
-    this.animationConstructorData = {
-      position: {},
-      dimensions
-    };
+    this.clientPositionData = {};
 
     if ('undefined' !== typeof index) {
       this.index = index;
@@ -36,7 +33,7 @@ export default class Layer {
     if (moduleSpecifier) {
       this.disable();
       import(moduleSpecifier).then(mod => {
-        this.animation = new mod.default(this.animationConstructorData);
+        this.animation = new mod.default(this.clientPositionData, dimensions);
         this.setProperties(properties);
       });
     }
@@ -76,7 +73,7 @@ export default class Layer {
   }
 
   setClientPosition(args) {
-    this.animationConstructorData.position = args;
+    this.clientPositionData = args;
   }
 
   render(ctx, audioInfo) {

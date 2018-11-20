@@ -3,7 +3,7 @@ import * as events from '../events.mjs';
 import allAnimations from '../animations.mjs';
 import './c-animation-preview.mjs';
 import './c-toggle-button.mjs';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../constants.mjs';
+import { SCREEN_DIMENSION_HEIGHT, SCREEN_DIMENSION_WIDTH } from '../../constants.mjs';
 
 const styleContent = `
 * {
@@ -128,12 +128,17 @@ window.customElements.define(
 
         const canvas = document.createElement('canvas', { is: 'c-animation-preview' });
         canvas.setAttribute('specifier', specifier);
-        canvas.width = SCREEN_WIDTH * 40;
-        canvas.height = SCREEN_HEIGHT * 40;
+        canvas.width = SCREEN_DIMENSION_WIDTH * 40;
+        canvas.height = SCREEN_DIMENSION_HEIGHT * 40;
         a.appendChild(canvas);
 
         this.animations.appendChild(a);
       });
+
+      const tagToggle = document.createElement('button');
+      tagToggle.innerText = 'toggle tags';
+      tagToggle.addEventListener('click', this.toggleTags);
+      this.tags.appendChild(tagToggle);
 
       Object.keys(allTags).forEach(tag => {
         const button = document.createElement('button', { is: 'c-toggle-button' });
@@ -145,6 +150,18 @@ window.customElements.define(
         this.tags.appendChild(button);
         this.tagsThatAreOn[tag] = true;
       });
+    }
+
+    toggleTags(e) {
+      e.preventDefault();
+      let next = e.target.nextSibling;
+
+      while (next) {
+        if (next.nodeName === 'BUTTON') {
+          next.click();
+        }
+        next = next.nextSibling;
+      }
     }
 
     toggleTag({ property, isOn }) {
@@ -169,7 +186,9 @@ window.customElements.define(
 
     connectedCallback() {
       const resize = () => {
-        this.animations.style.height = `${document.documentElement.offsetHeight - this.animations.offsetTop - 23}px`;
+        this.animations.style.height = `${document.documentElement.offsetHeight -
+          this.animations.offsetTop -
+          23}px`;
       };
       new ResizeObserver(entries => {
         for (let entry of entries) {

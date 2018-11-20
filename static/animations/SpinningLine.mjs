@@ -1,7 +1,7 @@
 import * as animationUtils from '../utils/animation.mjs';
 
 export const name = 'spining line';
-export const tags = ['simple', 'singleColor'];
+export const tags = ['trigger'];
 export const properties = ['color', 'radius', 'lineWidth', 'opacity', 'velocity'];
 
 export default class {

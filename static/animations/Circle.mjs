@@ -3,7 +3,7 @@ import * as animationUtils from '../utils/animation.mjs';
 const circleEnd = Math.PI * 2;
 
 export const name = 'circle medium';
-export const tags = ['simple', 'singleColor'];
+export const tags = ['trigger'];
 export const properties = ['color', 'frameCount', 'lineWidth', 'opacity'];
 
 export default class {

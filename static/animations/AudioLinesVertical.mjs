@@ -1,7 +1,7 @@
 import * as animationUtils from '../utils/animation.mjs';
 
 export const name = 'audioLinesVertical';
-export const tags = ['audio', 'simple', 'singleColor'];
+export const tags = ['audio', 'spectrum part'];
 export const properties = ['color', 'opacity', 'barWidth'];
 
 class Line {
@@ -39,15 +39,13 @@ export default class {
       return;
     }
 
-    const barsToShow = Math.floor(spectrum.length / this.clientCountOnSide);
-    const selectedLevels = spectrum.slice(this.clientIndexOnSide * barsToShow, (this.clientIndexOnSide + 1) * barsToShow);
+    const selectedLevels = animationUtils.getReleventPartOfSpectrum.call(this, spectrum);
     const sectionWidth = Math.floor(this.width / selectedLevels.length);
     const lineCount = Math.round(sectionWidth / this.barWidth);
     const maxWidth = sectionWidth / lineCount;
 
     ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
 
-    // console.log(selectedLevels);
     let x = maxWidth / 2;
     selectedLevels.forEach(v => {
       const w = (maxWidth / 100) * v;

@@ -3,7 +3,7 @@ import * as animationUtils from '../utils/animation.mjs';
 const end = Math.PI * 2;
 
 export const name = 'random dots';
-export const tags = ['simple', 'singleColor'];
+export const tags = ['random'];
 export const properties = ['color', 'dotCount'];
 
 class Dot {

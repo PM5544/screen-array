@@ -1,7 +1,7 @@
 import * as animationUtils from '../utils/animation.mjs';
 
 export const name = 'flash';
-export const tags = ['simple', 'singleColor'];
+export const tags = ['always on'];
 export const properties = ['color', 'opacity'];
 
 export default class {

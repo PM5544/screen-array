@@ -3,7 +3,7 @@ import * as animationUtils from '../utils/animation.mjs';
 const lineGapX = 750;
 
 export const name = 'landscape';
-export const tags = ['simple', 'singleColor'];
+export const tags = ['full side'];
 export const properties = ['color', 'lineWidth', 'opacity'];
 
 export default class {

@@ -1,7 +1,7 @@
 import * as animationUtils from '../utils/animation.mjs';
 
 export const name = 'block swipe';
-export const tags = ['simple', 'block', 'singleColor'];
+export const tags = ['trigger'];
 export const properties = ['color', 'frameCount', 'opacity'];
 
 export default class {

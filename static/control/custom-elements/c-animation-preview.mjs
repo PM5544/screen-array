@@ -1,4 +1,10 @@
-import { SCREEN_PROPORTION, SCREEN_WIDTH } from '../../constants.mjs';
+import {
+  SCREEN_PROPORTION,
+  SCREEN_DIMENSION_WIDTH,
+  PREVIEW_CLIENT_INDEX_ON_SIDE,
+  PREVIEW_CLIENT_COUNT_ON_SIDE,
+  PREVIEW_CLIENT_IS_MIRRORED
+} from '../../constants.mjs';
 
 const spectrum = [20, 30, 20, 10, 15, 7, 8, 12, 24, 56, 27, 82];
 
@@ -10,14 +16,21 @@ window.customElements.define(
     }
 
     load() {
-      import(this.specifier).then(A => {
-        this.animation = new A.default({
-          index: 1,
-          total: 3,
-          clientIsMirrored: false
+      import(this.specifier)
+        .then(A => {
+          this.animation = new A.default(this.dimensions, {
+            clientIndexOnSide: PREVIEW_CLIENT_INDEX_ON_SIDE,
+            clientCountOnSide: PREVIEW_CLIENT_COUNT_ON_SIDE,
+            clientIsMirrored: PREVIEW_CLIENT_IS_MIRRORED
+          });
+          if ('frame' in this.animation) {
+            this.animation.frame = 5;
+          }
+          this.animation.render(this.ctx, { spectrum });
+        })
+        .catch(err => {
+          console.error(err);
         });
-        this.animation.render(this.ctx, this.dimensions, { spectrum });
-      });
     }
 
     attributeChangedCallback(...[, , specifier]) {
@@ -28,7 +41,7 @@ window.customElements.define(
     connectedCallback() {
       this.ctx = this.getContext('2d', { alpha: false });
       const measuredWidth = this.offsetWidth;
-      const w = measuredWidth - (measuredWidth % SCREEN_WIDTH);
+      const w = measuredWidth - (measuredWidth % SCREEN_DIMENSION_WIDTH);
       const h = w * SCREEN_PROPORTION;
 
       this.dimensions = {

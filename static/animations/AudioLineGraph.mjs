@@ -1,7 +1,7 @@
 import * as animationUtils from '../utils/animation.mjs';
 
 export const name = 'audioLineGraph';
-export const tags = ['audio', 'simple', 'singleColor'];
+export const tags = ['audio', 'spectrum part'];
 export const properties = ['color', 'lineWidth', 'opacity'];
 
 export default class {

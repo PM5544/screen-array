@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import { CLIENT_COUNT } from './constants';
+import { CLIENT_COUNT } from '../static/constants';
 
 export function shutDownAll() {
   for (let num = 1; num <= CLIENT_COUNT; num++) {

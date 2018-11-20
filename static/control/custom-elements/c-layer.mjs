@@ -133,13 +133,17 @@ window.customElements.define(
     }
 
     setClientLayerProperties() {
-      const { isEnabled } = this;
-      this.justLoadAnyway = true;
-      this.nodes.form.dispatchEvent(new Event('submit'));
+      if (this.moduleSpecifier) {
+        const { isEnabled } = this;
+        this.justLoadAnyway = true;
+        this.nodes.form.dispatchEvent(new Event('submit'));
 
-      setTimeout(() => {
-        this.isEnabled = isEnabled;
-      }, 1000);
+        setTimeout(() => {
+          this.isEnabled = isEnabled;
+        }, 1000);
+      } else {
+        this.clear();
+      }
     }
 
     connectedCallback() {
@@ -268,7 +272,11 @@ function submit(e) {
           }
         });
       })
-      .catch(console.error);
+      .catch(err => {
+        console.error(err);
+        console.info(`clearing layer ${this.index} since loading the animation ${moduleSpecifier} ecountered problems`);
+        this.clear();
+      });
   } else {
     events.trigger('setLayerProperties', {
       data: {

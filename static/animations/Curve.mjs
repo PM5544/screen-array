@@ -1,7 +1,7 @@
 import * as animationUtils from '../utils/animation.mjs';
 
 export const name = 'curve';
-export const tags = ['simple', 'singleColor'];
+export const tags = ['all screens'];
 export const properties = ['color', 'height', 'stepSize', 'lineWidth', 'opacity'];
 
 export default class {

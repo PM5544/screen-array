@@ -1,7 +1,7 @@
 import * as animationUtils from '../utils/animation.mjs';
 
 export const name = 'audioLines';
-export const tags = ['audio', 'simple', 'singleColor'];
+export const tags = ['audio', 'spectrum part'];
 export const properties = ['color', 'lineWidth', 'opacity'];
 
 export default class {
@@ -33,8 +33,7 @@ export default class {
       return;
     }
 
-    const barsToShow = Math.floor(spectrum.length / this.clientCountOnSide);
-    const selectedLevels = spectrum.slice(this.clientIndexOnSide * barsToShow, (this.clientIndexOnSide + 1) * barsToShow);
+    const selectedLevels = animationUtils.getReleventPartOfSpectrum.call(this, spectrum);
     const barWidth = Math.floor(this.width / selectedLevels.length);
     const one = this.height / 100;
 

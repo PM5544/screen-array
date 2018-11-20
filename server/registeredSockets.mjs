@@ -1,4 +1,4 @@
-import { CLIENT_COUNT } from './constants';
+import { CLIENT_COUNT } from '../static/constants';
 
 export const sockets = new Map();
 export let socketValues = [];

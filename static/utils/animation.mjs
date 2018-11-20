@@ -5,3 +5,11 @@ export function extend (args) {
     });
   });
 }
+
+export function getReleventPartOfSpectrum (spectrum = []) {
+  const size = Math.floor(spectrum.length / this.clientCountOnSide);
+  if (Number.isFinite(size)) {
+    return spectrum.slice(this.clientIndexOnSide * size, (this.clientIndexOnSide + 1) * size );
+  }
+  return [];
+}
