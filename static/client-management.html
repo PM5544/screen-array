@@ -2,9 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Control page</title>
+  <title>Client management page</title>
   <script src="/socket.io/socket.io.js"></script>
-  <link rel="stylesheet" href="client-management.css" type="text/css" />
   <style>
     body,
     html {
@@ -19,7 +18,7 @@
   </style>
 </head>
 <body>
-  <ul class="clients"></ul>
+  <c-client-management />
 </body>
-<script type="module" src="client-management.mjs"></script>
+<script type="module" src="./control/custom-elements/c-client-management.mjs"></script>
 </html>

@@ -1,4 +1,4 @@
-export const CLIENT_COUNT = 6;
+export const CLIENT_COUNT = 10;
 export const LAYER_COUNT = 6;
 
 export const SCREEN_DIMENSION_HEIGHT = 4;
