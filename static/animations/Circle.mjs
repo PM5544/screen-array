@@ -37,12 +37,12 @@ export default class {
     this.frame = 0;
   }
 
-  render(ctx) {
+  render(ctx, timestamp) {
     if (this.frame === this.stopFrame) {
       return;
     } else if (this.frame < this.frameCount) {
-      ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
-      ctx.lineWidth = this.lineWidth;
+      animationUtils.set(ctx, 'strokeStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
+      animationUtils.set(ctx, 'lineWidth', this.lineWidth);
 
       ctx.beginPath();
       ctx.arc(this.centerX, this.centerY, this.frame / this.frameCount * this.maxRadius, 0, circleEnd);

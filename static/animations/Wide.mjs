@@ -32,8 +32,8 @@ export default class {
 
   render(ctx, ) {
 
-    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
-    ctx.lineWidth = this.lineWidth;
+    animationUtils.set(ctx, 'strokeStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
+    animationUtils.set(ctx, 'lineWidth', this.lineWidth);
     ctx.translate(-(this.clientIndexOnSide * this.width), 0);
     ctx.beginPath();
     if (this.clientIsMirrored) {

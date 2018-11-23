@@ -30,7 +30,7 @@ export default class {
 
   restart() {}
 
-  render(ctx, {spectrum = false}) {
+  render(ctx, timestamp, {spectrum = false}) {
     if (!spectrum) {
       return;
     }
@@ -38,8 +38,8 @@ export default class {
     const size = this.width / spectrum.length;
     const one = this.height / 100;
 
-    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
-    ctx.lineWidth = this.lineWidth;
+    animationUtils.set(ctx, 'strokeStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
+    animationUtils.set(ctx, 'lineWidth', this.lineWidth);
 
     ctx.beginPath();
     spectrum.forEach((v, i) => {

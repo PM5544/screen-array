@@ -60,17 +60,5 @@ window.customElements.define(
         });
       });
     }
-
-    connectedCallback() {
-      control.emit('sendAllClientIds');
-    }
-
-    disconnectedCallback() {
-      console.log('disconnected!');
-    }
-
-    adoptedCallback() {
-      console.log('adopted!');
-    }
   }
 );

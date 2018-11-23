@@ -1,6 +1,7 @@
 import { layers, flashLayer } from './layers.mjs';
 import { clear, ctx } from './canvas.mjs';
 
+const initialisationTimestamp = Date.now();
 let drawing = true;
 const audioLevels = {
   spectrum: []
@@ -12,10 +13,11 @@ export function setAudioLevels({spectrum}) {
 
 function drawFrame() {
   clear();
+  const timestamp = Date.now() - initialisationTimestamp;
 
   if (drawing) {
     layers.forEach(l => {
-      l.render(ctx, audioLevels);
+      l.render(ctx, timestamp, audioLevels);
     });
 
     flashLayer.render(ctx);

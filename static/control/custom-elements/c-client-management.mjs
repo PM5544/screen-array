@@ -109,8 +109,5 @@ window.customElements.define(
     connectedCallback() {
       socket.emit('sendAllClientIds');
     }
-
-    disconnectedCallback() {}
-    adoptedCallback() {}
   }
 );

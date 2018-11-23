@@ -1,5 +1,5 @@
 import * as events from '../events.mjs';
-import { second, minute } from '../time.mjs';
+import { second, minute } from '../../utils/time.mjs';
 
 const bpmHigh = 160;
 const bpmLow = 80;

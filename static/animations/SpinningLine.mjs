@@ -36,7 +36,7 @@ export default class {
   render(ctx) {
 
     ctx.strokeStyle = `rgba(${this.r},${this.g},${this.b},${this.opacity}`;
-    ctx.lineWidth = this.lineWidth;
+    animationUtils.set(ctx, 'lineWidth', this.lineWidth);
     ctx.beginPath();
 
     ctx.moveTo(

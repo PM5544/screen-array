@@ -33,7 +33,9 @@ export default class Layer {
     if (moduleSpecifier) {
       this.disable();
       import(moduleSpecifier).then(mod => {
-        this.animation = new mod.default(this.clientPositionData, dimensions);
+        this.animation = new mod.default(this.clientPositionData, dimensions, {
+          timestamp: new Date().getTime()
+        });
         this.setProperties(properties);
       });
     }

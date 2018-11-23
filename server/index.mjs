@@ -11,23 +11,19 @@ IO.attach(server, {
 
 controlServer.on('connection', function(co) {
   [
-    'addLayer',
-    'blackOutOn',
     'blackOutOff',
-    'changeColor',
+    'blackOutOn',
     'clearLayer',
-    'disableLayer',
     'disableAllLayers',
-    'enableLayer',
+    'disableLayer',
     'enableAllLayers',
-    'flashOn',
+    'enableLayer',
     'flashOff',
+    'flashOn',
     'identify',
     'loadAnimation',
-    'resetLayer',
-    'setLayerProperties',
-    'setSocketNumber',
-    'restartAnimation'
+    'restartAnimation',
+    'setLayerProperties'
   ].forEach(type => {
     co.on(type, function(instructions) {
       // console.log(type, instructions);
@@ -44,6 +40,10 @@ controlServer.on('connection', function(co) {
   co.on('sendAllAnimationPaths', async function() {
     co.emit('allAnimationPaths', await getAllAnimationsPaths());
   });
+
+  // co.on('setSocketNumber', function() {
+  //   registeredSockets.set('control', co.id);
+  // });
 
   co.on('sendAllClientIds', function() {
     // console.log('sendAllClientIds');

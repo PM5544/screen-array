@@ -1,12 +1,12 @@
-import './midi.mjs';
-import * as events from './events.mjs';
-import './animations.mjs';
-import { control } from './socket.mjs';
 import './custom-elements/c-layers.mjs';
 import './custom-elements/c-full-screen-toggle.mjs';
 import './custom-elements/c-client-statuses.mjs';
 import './custom-elements/c-beat-indicator.mjs';
 import './custom-elements/c-animations-explorer.mjs';
+import './midi.mjs';
+import * as events from './events.mjs';
+import { control } from './socket.mjs';
+import './animations.mjs';
 
 document.querySelector('[data-action="refresh"]').addEventListener('click', e => {
   e.preventDefault();
@@ -27,3 +27,5 @@ document.documentElement.addEventListener('keydown', ({ which }) => {
     events.trigger('beatSyncRestart');
   }
 });
+
+// control.emit('setSocketNumber');

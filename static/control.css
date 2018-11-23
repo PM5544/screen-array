@@ -2,9 +2,9 @@
   box-sizing: border-box;
 }
 :root {
-  --unit: 40px;
   --padding: 0.3rem;
   --border-color: #444;
+  --interactive-background-color: #333;
   --actionable-color: #666;
   --font-size: 11px;
   --font-color: #e2e2e2;
@@ -22,163 +22,36 @@ html {
 }
 html {
   background: #222;
-  font-family: sans-serif;
+  font-family: var(--font-family);
 }
 
 section {
   padding: var(--padding);
-  /* display: grid; */
 }
 section + section {
   padding-top: 0;
 }
-button,
-select {
+button {
   -webkit-appearance: none;
-  background: #333;
+  background: var(--interactive-background-color);
   color: var(--font-color);
   border: 1px solid var(--border-color);
   border-radius: 2px;
   cursor: pointer;
 }
-select {
-  flex: 1;
-  padding: 0 var(--padding);
-  border-bottom-color: var(--actionable-color);
-}
-button[disabled] {
-  color: grey;
-  cursor: default;
-}
 button + button {
   margin-left: var(--padding);
 }
-input {
-  -webkit-appearance: none;
-  background-color: #333;
-  color: var(--font-color);
-  padding: 2px 0 2px var(--padding);
-  border: 1px solid var(--actionable-color);
-  border-width: 0 0 1px 0;
-  max-width: 40px;
-}
-input + button {
-  padding: 2px;
-  max-width: 15px;
-  margin-left: 4px;
-  color: var(--font-color-dark);
-}
-input[type='color'] {
-  padding: 0;
-  border-radius: 4px;
-  width: 100%;
-  height: 1.5rem;
-  max-width: none;
-}
+
 .statuses {
   margin: 0 auto;
   display: flex;
 }
 
-
-c-layers {
-  display: flex;
-  padding-top: 0;
-}
-c-layer, c-flash-layer {
-  border: 1px solid rgb(82, 82, 82);
-}
-c-layer + c-layer,
-c-flash-layer + c-flash-layer {
-  border-left-width: 0;
-}
-c-layer {
-  flex: 2;
-}
-c-flash-layer {
-  flex: 1;
-}
-c-layer > div, c-flash-layer > div {
-  height: 100%;
-}
-
 .actions {
   display: flex;
 }
-.actions,
-.properties {
-  padding: var(--padding);
-}
-.actions + .actions,
-.actions + .properties {
-  padding-top: 0;
-}
-c-layer > div ~ div,
-c-flash-layer > div ~ div {
-  padding-top: 0;
-}
-c-layer .is-disabled,
-c-flash-layer .is-disabled {
-  height: 0.2rem;
-  margin: var(--padding) var(--padding) 0;
-  background-color: var(--disabled-color);
-}
-c-layer .is-enabled,
-c-flash-layer .is-enabled {
-  background-color: var(--enabled-color);
-}
 
-c-layer form,
-c-flash-layer form {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  height: 100%;
-}
-c-layer .properties,
-c-flash-layer .properties {
-  flex: 1;
-  margin: var(--padding) 0;
-}
-c-flash-layer .properties {
-  padding-top: 3rem;
-}
-c-layer button,
-c-flash-layer button {
-  flex: 1;
-}
-
-c-layer table,
-c-flash-layer table {
-  width: 100%;
-}
-c-layer td:last-child{
-  width: 60px;
-}
-c-flash-layer td:last-child {
-  width: 40px;
-}
-c-layer td,
-c-layer th,
-c-flash-layer td,
-c-flash-layer th {
-  text-align: left;
-  font-weight: normal;
-  font-size: var(--font-size);
-  color: var(--font-color);
-}
-c-layer th,
-c-flash-layer th {
-  color: var(--font-color-dark);
-}
-.animation-name{
-  font-size: var(--font-size);
-  color: var(--font-color);
-  padding: var(--padding);
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
 .tab-switcher {
   display: flex;
   list-style: none;
@@ -201,7 +74,4 @@ c-flash-layer th {
 }
 .highlight {
   background-color: var(--actionable-color);
-}
-.hidden {
-  display: none;
 }

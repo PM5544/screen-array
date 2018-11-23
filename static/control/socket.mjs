@@ -16,11 +16,12 @@ control.on('clientError', data => {
   'blackOutOn',
   'disableLayer',
   'enableLayer',
-  'flashOn',
   'flashOff',
+  'flashOn',
   'loadAnimation',
+  'restartAnimation',
   'setLayerProperties',
-  'restartAnimation'
+  'setSocketNumber'
 ].forEach(type => {
   events.listen(type, function(payload) {
     control.emit(type, payload);

@@ -29,7 +29,7 @@ export default class {
 
   render(ctx) {
 
-    ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
+    animationUtils.set(ctx, 'fillStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
 
     ctx.fillRect(0, 0, this.width, this.height);
   }

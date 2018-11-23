@@ -5,8 +5,8 @@ const animationExportProperties = ['name', 'properties', 'tags'];
 
 let allAnimations = new Map();
 
-control.on('allAnimationPaths', function(animationPaths) {
-  Promise.all(
+control.on('allAnimationPaths', async function(animationPaths) {
+  const data = await Promise.all(
     animationPaths.map(specifier =>
       import(specifier).then(module =>
         animationExportProperties.reduce(
@@ -18,13 +18,13 @@ control.on('allAnimationPaths', function(animationPaths) {
         )
       )
     )
-  ).then(data => {
-    allAnimations.clear();
-    data.forEach(anim => {
-      allAnimations.set(anim.specifier, anim);
-    });
-    trigger('allAnimationData', data);
+  );
+
+  allAnimations.clear();
+  data.forEach(anim => {
+    allAnimations.set(anim.specifier, anim);
   });
+  trigger('allAnimationData', data);
 });
 
 control.emit('sendAllAnimationPaths');

@@ -33,11 +33,11 @@ export default class {
     this.offset = 0;
   }
 
-  render(ctx) {
+  render(ctx, timestamp) {
     const partX = this.width / 2;
 
-    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
-    ctx.lineWidth = this.lineWidth;
+    animationUtils.set(ctx, 'strokeStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
+    animationUtils.set(ctx, 'lineWidth', this.lineWidth);
 
     // ctx.moveTo(this.offSet - width, centerY);
     ctx.beginPath();

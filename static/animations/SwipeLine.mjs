@@ -41,8 +41,8 @@ export default class {
       return;
     } else if (this.frame < this.frameCount) {
 
-      ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
-      ctx.lineWidth = this.lineWidth;
+      animationUtils.set(ctx, 'strokeStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
+      animationUtils.set(ctx, 'lineWidth', this.lineWidth);
 
       ctx.translate(-(this.clientIndexOnSide * this.width), 0);
 

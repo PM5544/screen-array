@@ -31,11 +31,11 @@ export default class {
     this.frame = 0;
   }
 
-  render(ctx) {
+  render(ctx, timestamp) {
     if (this.frame < this.frameCount) {
       const halfCount = Math.floor(this.frameCount / 2);
 
-      ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
+      animationUtils.set(ctx, 'fillStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
 
       let left;
       if (this.frame > halfCount) {

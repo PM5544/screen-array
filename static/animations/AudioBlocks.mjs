@@ -27,7 +27,7 @@ export default class {
 
   restart() {}
 
-  render(ctx, {spectrum = false}) {
+  render(ctx, timestamp, {spectrum = false}) {
     if (!spectrum) {
       return;
     }
@@ -36,7 +36,7 @@ export default class {
     const barWidth = Math.floor(this.width / selectedLevels.length);
     const one = this.height / 100;
 
-    ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
+    animationUtils.set(ctx, 'fillStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
 
     selectedLevels.forEach((v, i) => {
       ctx.fillRect(i * barWidth, this.height - v * one, barWidth, this.height);

@@ -73,7 +73,13 @@
       };
     }
 
-    const animation = new Animation({ clientIndexOnSide: 0, clientCountOnSide: 3, clientIsMirrored: false }, dimensions);
+    const animation = new Animation(
+      { clientIndexOnSide: 0, clientCountOnSide: 3, clientIsMirrored: false },
+      dimensions,
+      {
+        timestamp: new Date().getTime()
+      }
+    );
 
     if ('restart' in animation) {
       animation.restart();
@@ -82,7 +88,7 @@
 
     function drawFrame() {
       clear();
-      animation.render(ctx, getAudioLevels());
+      animation.render(ctx, new Date(). getTime(), getAudioLevels());
       window.requestAnimationFrame(drawFrame);
     }
 

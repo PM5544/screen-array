@@ -17,8 +17,12 @@ function getRandomFromArray(ar) {
 }
 
 export function set(socketNumber, socketId) {
-  console.log('sockets', socketNumber, 'set', sockets.size);
+  console.log('sockets', socketNumber, 'set', sockets.size, socketId);
   if (!socketNumber) {
+    return;
+  }
+
+  if ('control' === socketNumber) {
     return;
   }
 
@@ -78,16 +82,3 @@ export function side(side = 'right') {
 export function randomSide() {
   return side(getRandomFromArray(sides));
 }
-
-// export default {
-//   one,
-//   random,
-//   randomFromSide,
-//   randomSide,
-//   reset,
-//   set,
-//   side,
-//   sockets,
-//   socketsLeftValues,
-//   socketsRightValues
-// };

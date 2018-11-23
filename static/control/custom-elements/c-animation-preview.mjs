@@ -15,22 +15,26 @@ window.customElements.define(
       return ['specifier'];
     }
 
-    load() {
-      import(this.specifier)
-        .then(A => {
-          this.animation = new A.default(this.dimensions, {
-            clientIndexOnSide: PREVIEW_CLIENT_INDEX_ON_SIDE,
-            clientCountOnSide: PREVIEW_CLIENT_COUNT_ON_SIDE,
-            clientIsMirrored: PREVIEW_CLIENT_IS_MIRRORED
-          });
-          if ('frame' in this.animation) {
-            this.animation.frame = 5;
-          }
-          this.animation.render(this.ctx, { spectrum });
-        })
-        .catch(err => {
-          console.error(err);
-        });
+    async load() {
+      let A;
+
+      try {
+        A = await import(this.specifier);
+      } catch (e) {
+        console.error(e);
+      }
+
+      this.animation = new A.default(this.dimensions, {
+        clientIndexOnSide: PREVIEW_CLIENT_INDEX_ON_SIDE,
+        clientCountOnSide: PREVIEW_CLIENT_COUNT_ON_SIDE,
+        clientIsMirrored: PREVIEW_CLIENT_IS_MIRRORED
+      });
+
+      if ('frame' in this.animation) {
+        this.animation.frame = 5;
+      }
+
+      this.animation.render(this.ctx, 3000, { spectrum });
     }
 
     attributeChangedCallback(...[, , specifier]) {

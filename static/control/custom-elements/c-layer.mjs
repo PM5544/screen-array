@@ -1,10 +1,119 @@
-import { getFormValues, NodesProxy, ActionsProxy } from '../dom.mjs';
+import { empty, getFormValues, NodesProxy, ActionsProxy } from '../dom.mjs';
 import * as events from '../events.mjs';
 import * as propertyTypes from '../propertyTypes.mjs';
 import './c-animation-preview.mjs';
 import './c-toggle-button.mjs';
 
 const { content } = document.getElementById('layer');
+
+export var sharedStyleContent = `
+form {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  height: 100%;
+}
+button{
+  -webkit-appearance: none;
+  background: var(--interactive-background-color);
+  color: var(--font-color);
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  cursor: pointer;
+}
+button[disabled] {
+  color: grey;
+  cursor: default;
+}
+button + button {
+  margin-left: var(--padding);
+}
+input {
+  -webkit-appearance: none;
+  background-color: var(--interactive-background-color);
+  color: var(--font-color);
+  padding: 2px 0 2px var(--padding);
+  border: 1px solid var(--actionable-color);
+  border-width: 0 0 1px 0;
+  max-width: 40px;
+}
+input + button {
+  padding: 2px;
+  max-width: 15px;
+  margin-left: 4px;
+  color: var(--font-color-dark);
+}
+input[type='color'] {
+  padding: 0;
+  border-radius: 4px;
+  width: 100%;
+  height: 1.5rem;
+  max-width: none;
+}
+div ~ div {
+  padding-top: 0;
+}
+.is-disabled {
+  height: 0.2rem;
+  margin: var(--padding) var(--padding) 0;
+  background-color: var(--disabled-color);
+}
+.is-enabled {
+  background-color: var(--enabled-color);
+}
+.properties{
+  flex: 1;
+  margin: var(--padding) 0;
+}
+
+button {
+  flex: 1;
+}
+
+table {
+  width: 100%;
+}
+td:last-child{
+  width: 60px;
+}
+
+td,
+th {
+  text-align: left;
+  font-weight: normal;
+  white-space: nowrap;
+  font-size: var(--font-size);
+  color: var(--font-color);
+}
+th {
+  color: var(--font-color-dark);
+}
+.actions,
+.properties {
+  padding: var(--padding);
+}
+.actions {
+  display: flex;
+}
+.actions + .actions,
+.actions + .properties {
+  padding-top: 0;
+}`;
+
+var styleContent = `
+${sharedStyleContent}
+:host > div {
+  height: 100%;
+}
+.animation-name {
+  font-size: var(--font-size);
+  color: var(--font-color);
+  padding: var(--padding);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+`;
 
 window.customElements.define(
   'c-layer',
@@ -52,16 +161,50 @@ window.customElements.define(
       }
     }
 
-    set animationName (v = '') {
+    set animationName(v = '') {
       this.nodes.animationName.innerText = v;
     }
-
 
     constructor() {
       super();
 
-      this.nodes = new NodesProxy(this);
-      this.actions = new ActionsProxy(this);
+      this.attachShadow({ mode: 'open' });
+      {
+        const styles = document.createElement('style');
+        styles.textContent = styleContent;
+        this.shadowRoot.appendChild(styles);
+      }
+
+      this.shadowRoot.appendChild(content.cloneNode(true));
+
+      this.nodes = new NodesProxy(this.shadowRoot);
+      this.actions = new ActionsProxy(this.shadowRoot);
+
+      this.isEnabled = false;
+
+      this.actions.toggleEnabled.isOn = false;
+      this.actions.toggleEnabled.handler = enabled => {
+        this.isEnabled = enabled;
+        this.storeProperties();
+      };
+      this.actions.toggleEnabled.setAttribute('disabled', '');
+
+      this.actions.clear.addEventListener('click', this.clear.bind(this));
+      this.actions.load.addEventListener('click', this.selectAnimation.bind(this));
+
+      this.nodes.propertiesBody.addEventListener(
+        'click',
+        ({ target }) => {
+          if (target.nodeName === 'BUTTON') {
+            const node = target.previousSibling;
+            node.value = node.getAttribute('placeholder');
+          }
+        },
+        false
+      );
+
+      this.nodes.propertiesTable.setAttribute('hidden', '');
+      this.nodes.form.addEventListener('submit', submit.bind(this));
 
       this.addEventListener('mouseenter', () => {
         events.trigger('focusLayer', {
@@ -85,7 +228,7 @@ window.customElements.define(
       });
     }
 
-    selectAnimation () {
+    selectAnimation() {
       if (!('_selectedAnimationToLoad' in this)) {
         return;
       }
@@ -97,7 +240,7 @@ window.customElements.define(
       events.trigger('loadedAnimationIntoLayer');
     }
 
-    clear () {
+    clear() {
       this.isEnabled = false;
       this.nodes.propertiesTable.setAttribute('hidden', '');
       this.nodes.propertiesBody.innerHTML = '';
@@ -136,6 +279,7 @@ window.customElements.define(
       if (this.moduleSpecifier) {
         const { isEnabled } = this;
         this.justLoadAnyway = true;
+
         this.nodes.form.dispatchEvent(new Event('submit'));
 
         setTimeout(() => {
@@ -144,42 +288,6 @@ window.customElements.define(
       } else {
         this.clear();
       }
-    }
-
-    connectedCallback() {
-      if (this._domIitialised) {
-        return;
-      }
-      this._domIitialised = true;
-
-      this.appendChild(content.cloneNode(true));
-      this.isEnabled = false;
-
-      this.actions.toggleEnabled.isOn = false;
-      this.actions.toggleEnabled.handler = enabled => {
-        this.isEnabled = enabled;
-        this.storeProperties();
-      };
-      this.actions.toggleEnabled.setAttribute('disabled', '');
-
-      this.actions.clear.addEventListener('click', this.clear.bind(this));
-      this.actions.load.addEventListener('click', this.selectAnimation.bind(this));
-
-      this.nodes.propertiesBody.addEventListener(
-        'click',
-        ({ target }) => {
-          if (target.nodeName === 'BUTTON') {
-            const node = target.previousSibling;
-            node.value = node.getAttribute('placeholder');
-          }
-        },
-        false
-      );
-
-      this.nodes.propertiesTable.setAttribute('hidden', '');
-      this.nodes.form.addEventListener('submit', submit.bind(this));
-
-      this.restoreProperties();
     }
 
     storeProperties() {
@@ -200,19 +308,17 @@ window.customElements.define(
       }
     }
 
-    disconnectedCallback() {
-      console.log('disconnected!');
+    connectedCallback () {
+      this.restoreProperties();
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
       this.index = parseInt(newValue, 10);
     }
-
-    adoptedCallback() {}
   }
 );
 
-function submit(e) {
+async function submit(e) {
   e.preventDefault();
 
   const { moduleSpecifier, justLoadAnyway } = this;
@@ -220,7 +326,7 @@ function submit(e) {
 
   const values = getFormValues(e.target);
 
- if ((this._moduleSpecifierChanged && moduleSpecifier) || justLoadAnyway) {
+  if ((this._moduleSpecifierChanged && moduleSpecifier) || justLoadAnyway) {
     this._moduleSpecifierChanged = false;
     events.trigger('enableMidiLayerToggle', { data: { index: this.index } });
 
@@ -230,53 +336,91 @@ function submit(e) {
 
     // load the module and invoke it and load the animations to get the properties
     // match them and add them as a placeholder to indicate default values
-    import(moduleSpecifier)
-      .then(mod => [new mod.default(), mod])
-      .then(([invoked, { properties }]) => {
-        this.nodes.propertiesBody.innerHTML = properties
-          .map(v => {
-            if (v === 'color') {
-              return `<tr><td colspan=2>
-                <input type=color name=color value=#ffffff />
-                </td></tr>`;
-            }
-            const t = propertyTypes[v];
-            return `<tr><td>${v}</td>
-              <td><input placeholder="${invoked[v]}" type=number min="${t.min}" max="${
-              t.max
-            }" autocomplete=off step="${
-              t.step
-            }" name="${v}" /><button type=button tabindex="-1"><</button></td></tr>`;
-          })
-          .join('');
-        this.nodes.propertiesTable.removeAttribute('hidden');
+    let mod;
+    try {
+      mod = await import(moduleSpecifier);
+    } catch (e) {
+      console.error(e);
+      console.info(
+        `clearing layer ${
+          this.index
+        } since loading the animation ${moduleSpecifier} ecountered problems`
+      );
+      this.clear();
+    }
 
-        if (this.preSelectedValues) {
-          Object.keys(this.preSelectedValues).forEach(property => {
-            const input = this.nodes.propertiesBody.querySelector(`[name=${property}`);
-            if (input) {
-              input.value = this.preSelectedValues[property];
-            }
-          });
-          delete this.preSelectedValues;
+    const invoked = new mod.default();
+
+    empty(this.nodes.propertiesBody);
+
+    mod.properties.map(v => {
+      if (v === 'color') {
+        const tr = document.createElement('tr');
+
+        const td = document.createElement('td');
+        td.colSpan = '2';
+
+        const input = document.createElement('input');
+        input.type = 'color';
+        input.name = 'color';
+        input.value = '#ffffff';
+        td.appendChild(input);
+        tr.appendChild(td);
+
+        this.nodes.propertiesBody.append(tr);
+      } else {
+        const t = propertyTypes[v];
+        const tr = document.createElement('tr');
+
+        const td1 = document.createElement('td');
+        td1.innerText = v;
+        tr.appendChild(td1);
+
+        const td2 = document.createElement('td');
+        tr.appendChild(td2);
+
+        const input = document.createElement('input');
+        input.placeholder = invoked[v];
+        input.type = 'number';
+        input.min = t.min;
+        input.max = t.max;
+        input.step = t.step;
+        input.autocomplete = 'off';
+        input.name = v;
+        td2.appendChild(input);
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.tabindex = '-1';
+        button.innerText = '<';
+        td2.appendChild(button);
+
+        this.nodes.propertiesBody.append(tr);
+      }
+    });
+
+    this.nodes.propertiesTable.removeAttribute('hidden');
+
+    if (this.preSelectedValues) {
+      Object.keys(this.preSelectedValues).forEach(property => {
+        const input = this.nodes.propertiesBody.querySelector(`[name=${property}`);
+        if (input) {
+          input.value = this.preSelectedValues[property];
         }
-
-        this.storeProperties();
-
-        // send the loadAnimation to the clients
-        events.trigger('loadAnimation', {
-          data: {
-            index: this.index,
-            moduleSpecifier,
-            properties: values
-          }
-        });
-      })
-      .catch(err => {
-        console.error(err);
-        console.info(`clearing layer ${this.index} since loading the animation ${moduleSpecifier} ecountered problems`);
-        this.clear();
       });
+      delete this.preSelectedValues;
+    }
+
+    this.storeProperties();
+
+    // send the loadAnimation to the clients
+    events.trigger('loadAnimation', {
+      data: {
+        index: this.index,
+        moduleSpecifier,
+        properties: values
+      }
+    });
   } else {
     events.trigger('setLayerProperties', {
       data: {
@@ -284,37 +428,7 @@ function submit(e) {
         properties: values
       }
     });
+
     this.storeProperties();
   }
 }
-
-// function replaceFirstOptionText({ target }) {
-//   target.firstChild.textContent = 'no animation';
-//   target.removeEventListener('change', replaceFirstOptionText);
-// }
-
-// function populateAnimationsDropDown(animations) {
-//   const { value } = this.animationSelectNode;
-//   const { preSelected } = this;
-//   const selectedValue = preSelected || value;
-
-//   this.animationSelectNode.innerHTML = ['<option value="">select animation</option>']
-//     .concat(
-//       animations.map(
-//         v =>
-//           `<option value="${v.specifier}" ${v.specifier === selectedValue ? 'selected' : ''}>${
-//             v.name
-//           }</option>`
-//       )
-//     )
-//     .join('');
-//   if (preSelected) {
-//     this.nodes.form.dispatchEvent(new Event('submit'));
-//     if (this.preEnabled) {
-//       this.enable(true);
-//     }
-//     delete this.preSelected;
-//     delete this.preEnabled;
-//   }
-//   this.animationSelectNode.addEventListener('change', replaceFirstOptionText);
-// }

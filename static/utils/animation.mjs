@@ -13,3 +13,9 @@ export function getReleventPartOfSpectrum (spectrum = []) {
   }
   return [];
 }
+
+export function set(ctx, property, value) {
+  if (ctx[property] !== value) {
+    ctx[property] = value;
+  }
+}

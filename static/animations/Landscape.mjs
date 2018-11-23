@@ -47,7 +47,7 @@ export default class {
     }
 
     ctx.beginPath();
-    ctx.lineWidth = this.lineWidth;
+    animationUtils.set(ctx, 'lineWidth', this.lineWidth);
 
     const focalPoint = Math.round(fullWidth / 2);
 
@@ -55,7 +55,7 @@ export default class {
     let xDif = 0;
     let yDif = 0;
 
-    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
+    animationUtils.set(ctx, 'strokeStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
 
     let x1;
     let x2;

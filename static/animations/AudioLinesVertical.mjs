@@ -34,7 +34,7 @@ export default class {
 
   restart() {}
 
-  render(ctx, {spectrum = false}) {
+  render(ctx, timestamp, {spectrum = false}) {
     if (!spectrum) {
       return;
     }
@@ -44,7 +44,7 @@ export default class {
     const lineCount = Math.round(sectionWidth / this.barWidth);
     const maxWidth = sectionWidth / lineCount;
 
-    ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
+    animationUtils.set(ctx, 'fillStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
 
     let x = maxWidth / 2;
     selectedLevels.forEach(v => {
