@@ -1,67 +1,69 @@
+import templateLoader from '../../utils/template-loader.mjs';
 import * as dom from '../dom.mjs';
 import * as events from '../events.mjs';
 
-const { content } = document.getElementById('flash-layer');
+const name = 'c-flash-layer';
 
-window.customElements.define(
-  'c-flash-layer',
-  class extends HTMLElement {
+templateLoader(name).then(content => {
+  window.customElements.define(
+    name,
+    class extends HTMLElement {
+      constructor() {
+        super();
 
-    constructor () {
-      super();
+        this.attachShadow({ mode: 'open' });
+        this.shadowRoot.appendChild(content.cloneNode(true));
 
-      this.attachShadow({ mode: 'open' });
-      this.shadowRoot.appendChild(content.cloneNode(true));
+        this.formNode = this.shadowRoot.querySelector('form');
 
-      this.formNode = this.shadowRoot.querySelector('form');
+        this.formNode.addEventListener('submit', e => {
+          e.preventDefault();
 
-      this.formNode.addEventListener('submit', e => {
-        e.preventDefault();
+          const values = dom.getFormValues(e.target);
 
-        const values = dom.getFormValues(e.target);
+          events.trigger('setLayerProperties', {
+            data: {
+              index: this.index,
+              properties: values
+            }
+          });
 
-        events.trigger('setLayerProperties', {
-          data: {
-            index: this.index,
-            properties: values
+          const layerProperties = this.getLayerProperties();
+          if (layerProperties) {
+            localStorage.setItem(`layerProperties-${this.index}`, JSON.stringify(layerProperties));
+          } else {
+            localStorage.removeItem(`layerProperties-${this.index}`);
           }
         });
 
-        const layerProperties = this.getLayerProperties();
-        if (layerProperties) {
-          localStorage.setItem(`layerProperties-${this.index}`, JSON.stringify(layerProperties));
-        } else {
-          localStorage.removeItem(`layerProperties-${this.index}`);
+        this.index = 'flashLayer';
+      }
+
+      getLayerProperties() {
+        return dom.getFormValues(this.formNode);
+      }
+
+      setLayerProperties(args) {
+        if (args) {
+          Object.keys(args).forEach(name => {
+            this.formNode.querySelector(`[name=${name}]`).value = args[name];
+          });
+          this.formNode.dispatchEvent(new Event('submit'));
         }
-      });
+      }
 
-      this.index = 'flashLayer';
-    }
+      connectedCallback() {
+        const stored = JSON.parse(localStorage.getItem(`layerProperties-${this.index}`));
+        this.setLayerProperties(stored);
+      }
 
-    getLayerProperties() {
-      return dom.getFormValues(this.formNode);
-    }
+      disconnectedCallback() {
+        console.log('disconnected!');
+      }
 
-    setLayerProperties(args) {
-      if (args) {
-        Object.keys(args).forEach(name => {
-          this.formNode.querySelector(`[name=${name}]`).value = args[name];
-        });
-        this.formNode.dispatchEvent(new Event('submit'));
+      adoptedCallback() {
+        console.log('adopted!');
       }
     }
-
-    connectedCallback() {
-      const stored = JSON.parse(localStorage.getItem(`layerProperties-${this.index}`));
-      this.setLayerProperties(stored);
-    }
-
-    disconnectedCallback() {
-      console.log('disconnected!');
-    }
-
-    adoptedCallback() {
-      console.log('adopted!');
-    }
-  }
-);
+  );
+});

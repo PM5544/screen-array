@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="shadow-dom.css">
+<style>
+* {
+  box-sizing: border-box;
+}
+:host {
+  font-family: var(--font-family);
+}
+:host > .tags {
+  display: flex;
+}
+.tags {
+  padding: var(--padding) 0;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  background-color: var(--background-color);
+  top: 0;
+}
+.tags > button + button{
+  margin-left: var(--padding);
+}
+.animations {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-auto-rows: min-content;
+  grid-gap: calc(var(--padding) * 2);
+}
+.animations > div {
+  cursor: pointer;
+  height: auto;
+}
+.animations > div * {
+  pointer-events: none;
+}
+.name {
+  font-size: var(--font-size);
+  color: var(--font-color);
+  line-height: calc(var(--font-size) + 1rem);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+canvas {
+  width: 100%;
+  border: 1px solid var(--border-color);
+}
+</style>
+<div data-selector=tags class=tags></div>
+<div data-selector=animations class=animations></div>

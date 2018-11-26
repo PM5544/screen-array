@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="shadow-dom.css">
+<style>
+.tab-buttons {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+}
+.selected-tab-button {
+  color: var(--font-color);
+  background-color: var(--background-color);
+  margin-bottom: -1px;
+}
+button {
+  border-bottom-width: 0;
+}
+button + button {
+  margin: 0;
+}
+section {
+  overflow-y: auto;
+  border-bottom: 1px solid var(--border-color);
+}
+</style>
+<div class="tab-buttons"></div>
+<section><slot></slot></section>

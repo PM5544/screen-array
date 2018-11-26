@@ -1,0 +1,107 @@
+<style>
+form {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  height: 100%;
+}
+input {
+  -webkit-appearance: none;
+  background-color: var(--interactive-background-color);
+  color: var(--font-color);
+  padding: 3px 0 2px var(--padding);
+  border: 1px solid var(--actionable-color);
+  border-width: 0 0 1px 0;
+  max-width: 40px;
+}
+input + button {
+  padding: 2px;
+  max-width: 15px;
+  margin-left: 4px;
+  color: var(--font-color-dark);
+}
+input[type='color'] {
+  padding: 0;
+  border-radius: 2px;
+  width: 100%;
+  height: 1rem;
+  max-width: none;
+  border: 1px solid var(--actionable-color);
+}
+input[type=color]::-webkit-color-swatch-wrapper,
+input[type=color]::-webkit-color-swatch{
+  padding: 0;
+  border: none;
+}
+div ~ div {
+  padding-top: 0;
+}
+.is-disabled {
+  height: 0.2rem;
+  margin: var(--padding) var(--padding) 0;
+  background-color: var(--disabled-color);
+}
+.is-enabled {
+  background-color: var(--enabled-color);
+}
+.properties{
+  flex: 1;
+  margin: var(--padding) 0;
+}
+
+button {
+  flex: 1;
+}
+
+table {
+  width: 100%;
+}
+td:last-child{
+  width: 60px;
+}
+
+td,
+th {
+  text-align: left;
+  font-weight: normal;
+  white-space: nowrap;
+  font-size: var(--font-size);
+  color: var(--font-color-dark);
+}
+th {
+  color: var(--font-color-dark);
+}
+.actions,
+.properties {
+  padding: var(--padding);
+}
+.actions {
+  display: flex;
+}
+.actions + .actions,
+.actions + .properties {
+  padding-top: 0;
+}
+.properties {
+  padding-top: 1.74rem;
+}
+td:last-child {
+  width: 40px;
+}
+</style>
+<div>
+  <form>
+    <div class="is-disabled is-enabled"></div>
+    <div class="properties">
+      <table>
+        <tbody>
+          <tr><td colspan="2"><input value="#ffffff" type="color" name="color" /></td></tr>
+          <tr><td>opacity</td><td><input value="1" type="number" min="0" max="1" autocomplete="off" step=".1" name="opacity" /></td></tr></tbody>
+        </tbody>
+      </table>
+    </div>
+    <div class="actions">
+      <button>apply</button>
+    </div>
+  </form>
+</div>

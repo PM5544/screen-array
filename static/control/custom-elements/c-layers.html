@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="shadow-dom.css">
+<style>
+:host > div {
+  display: flex;
+  padding: var(--padding);
+}
+:host > div + div {
+  padding-top: 0;
+  border-bottom: 1px solid var(--border-color);
+}
+:host > div:first-of-type {
+  border-top: 1px solid var(--border-color);
+}
+</style>
+<div><slot name=buttons></div>
+<div><slot></slot></div>
