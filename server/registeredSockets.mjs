@@ -1,6 +1,7 @@
 import { CLIENT_COUNT } from '../static/constants';
 
 export const sockets = new Map();
+export let controlSocketIds = [];
 export let socketValues = [];
 export let socketsRightValues = [];
 export let socketsLeftValues = [];
@@ -16,17 +17,18 @@ function getRandomFromArray(ar) {
   return ar[Math.floor(Math.random() * ar.length)];
 }
 
-export function set(socketNumber, socketId) {
-  console.log('sockets', socketNumber, 'set', sockets.size, socketId);
-  if (!socketNumber) {
+export function set(clientPosition, socketId) {
+  console.log('sockets', clientPosition, 'set', sockets.size, socketId);
+  if (!clientPosition) {
     return;
   }
 
-  if ('control' === socketNumber) {
+  if ('control' === clientPosition) {
+    // controlSocketIds.push(socketId);
     return;
   }
 
-  sockets.set(socketNumber, socketId);
+  sockets.set(clientPosition, socketId);
   socketValues = Array.from(sockets.values());
 
   const { size } = sockets;

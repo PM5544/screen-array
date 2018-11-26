@@ -5,23 +5,24 @@
   --padding: 0.3rem;
   --border-color: #444;
   --interactive-background-color: #333;
-  --actionable-color: #666;
-  --font-size: 11px;
-  --font-color: #e2e2e2;
-  --font-family: sans-serif;
-  --font-color-dark: #868383;
   --enabled-color: #145037;
   --disabled-color: #421616;
+  --actionable-color: #666;
+  --font-size: 11px;
+  --font-family: sans-serif;
+  --font-color: #e2e2e2;
+  --font-color-dark: #868383;
+  --background-color: #222;
 }
 body,
 html {
   margin: 0;
   padding: 0;
-  height: 100vh;
   width: 100vw;
+  min-width: 1150px;
 }
 html {
-  background: #222;
+  background: var(--background-color);
   font-family: var(--font-family);
 }
 
@@ -39,6 +40,10 @@ button {
   border-radius: 2px;
   cursor: pointer;
 }
+button[disabled] {
+  color: grey;
+  cursor: default;
+}
 button + button {
   margin-left: var(--padding);
 }
@@ -52,26 +57,24 @@ button + button {
   display: flex;
 }
 
-.tab-switcher {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: var(--padding) 0 0 0;
-  border-bottom: 1px solid var(--border-color);
-}
-.tab-switcher button {
-  border-radius: 0;
-  border-right-width: 0;
-  border-bottom-width: 0;
-  margin-bottom: -1px;
-}
-.tab-switcher > :last-child button {
-  border-radius: 0 .5rem 0 0;
-  border-right-width: 1px;
-}
-.tab {
-  margin-top: 0;
-}
 .highlight {
   background-color: var(--actionable-color);
+}
+
+c-layer, c-flash-layer {
+  border: 1px solid var(--border-color);
+}
+c-layer + c-layer,
+c-layer + c-flash-layer {
+  border-left-width: 0;
+}
+c-layer {
+  flex: 2;
+}
+c-flash-layer {
+  flex: 1;
+}
+
+c-layers {
+
 }

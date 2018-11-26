@@ -17,8 +17,11 @@ export default class {
     animationUtils.extend.call(this, args);
 
     this.sideWidth = this.clientCountOnSide * this.width;
-    this.yMax = this.height * .25;
-    this.yMin = this.height * .75;
+    this.yDiff = this.height / 4;
+    this.center = this.height / 2;
+    this.revolutionsPerMinute = 30;
+
+    this.divideBy = ((1000 * 60) / this.revolutionsPerMinute) / (Math.PI * 2);
     this.reset();
   }
 
@@ -28,15 +31,14 @@ export default class {
     this.g = 255;
     this.b = 255;
     this.opacity = 1;
-    this.pixelsPerSecond = 10;
-    this.start = new Date().getTime();
+    this.revolutionsPerMinute = 30;
   }
 
   restart() {}
 
   render(ctx, timestamp) {
 
-    this.y = Math.sin(); // calculate y based on timestamp / sine with this.min this.max
+    this.y = this.center + (Math.sin(timestamp / this.divideBy) * this.yDiff);
 
     ctx.beginPath();
     animationUtils.set(ctx, 'lineWidth', this.lineWidth);
@@ -45,5 +47,7 @@ export default class {
     ctx.moveTo(0, this.y);
     ctx.lineTo(this.sideWidth, this.y);
     ctx.stroke();
+
+    return [0, this.y-1, this.width, 2];
   }
 }

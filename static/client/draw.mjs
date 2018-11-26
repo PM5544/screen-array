@@ -11,18 +11,22 @@ export function setAudioLevels({spectrum}) {
   audioLevels.spectrum = spectrum;
 }
 
-function drawFrame() {
+let lastTimestamp = Date.now();
+
+function drawFrame(ts) {
   clear();
-  const timestamp = Date.now() - initialisationTimestamp;
+  const frameTime = ts - lastTimestamp;
 
   if (drawing) {
     layers.forEach(l => {
-      l.render(ctx, timestamp, audioLevels);
+      l.render(ctx, ts, audioLevels);
     });
 
     flashLayer.render(ctx);
 
     window.requestAnimationFrame(drawFrame);
+
+    lastTimestamp = ts;
   }
 }
 

@@ -3,7 +3,6 @@ import * as events from './events.mjs';
 
 io({ transports: ['websocket'] });
 
-export const clients = io('/clients');
 export const control = io('/control');
 
 control.on('clientError', data => {
@@ -21,7 +20,7 @@ control.on('clientError', data => {
   'loadAnimation',
   'restartAnimation',
   'setLayerProperties',
-  'setSocketNumber'
+  'setClientPosition'
 ].forEach(type => {
   events.listen(type, function(payload) {
     control.emit(type, payload);

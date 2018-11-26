@@ -20,10 +20,10 @@ export function getFormValues(target) {
   }, {});
 }
 
-export const NodesProxy = createProxy('selector');
-export const ActionsProxy = createProxy('action');
+export const NodesProxy = createProxyConstructor('selector');
+export const ActionsProxy = createProxyConstructor('action');
 
-function createProxy(type) {
+function createProxyConstructor(type) {
   return function(context) {
     return new Proxy(new Map(), {
       get(obj, property) {

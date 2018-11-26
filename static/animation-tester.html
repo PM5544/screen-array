@@ -13,17 +13,31 @@
 
       html {
         background: black;
+        background: red;
         font-family: sans-serif;
+      }
+      canvas {
+        margin: 0 auto;
+        border: 1px solid white;
+        transform: translateZ(0);
       }
     </style>
   </head>
   <body>
-    <canvas></canvas>
+    <canvas width="800" height="600"></canvas>
   </body>
   <script type="module">
-    import Animation from './animations/Dots.mjs';
-    import { clear, ctx, dimensions } from './client/canvas.mjs';
-
+    import Animation from './animations/Landscape.mjs';
+    const canvas = document.querySelector('canvas');
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
+    const dimensions = {
+      width: WIDTH,
+      height: HEIGHT,
+      centerX: WIDTH / 2,
+      centerY: HEIGHT / 2
+    };
+    const ctx = canvas.getContext('2d', { alpha: false });
     let oldLevels = [];
     const iterations = 10;
     let iterationCounter = iterations;
@@ -74,7 +88,7 @@
     }
 
     const animation = new Animation(
-      { clientIndexOnSide: 0, clientCountOnSide: 3, clientIsMirrored: false },
+      { clientIndexOnSide: 0, clientCountOnSide: 1, clientIsMirrored: false },
       dimensions,
       {
         timestamp: new Date().getTime()
@@ -86,9 +100,18 @@
     }
     makeNewAudioLevels();
 
-    function drawFrame() {
-      clear();
-      animation.render(ctx, new Date(). getTime(), getAudioLevels());
+    const clearAreas = [];
+    function drawFrame(ts) {
+      clearAreas.forEach(([x, y, w, h]) => {
+        // ctx.clearRect(x, y, w, h);
+        ctx.fillStyle = 'black';
+        ctx.fillRect(x, y, w, h);
+      });
+      clearAreas.length = 0;
+
+      clearAreas.push(animation.render(ctx, ts, getAudioLevels()));
+      // ctx.clearRect(0, 0, WIDTH, HEIGHT);
+      // animation.render(ctx, ts, getAudioLevels());
       window.requestAnimationFrame(drawFrame);
     }
 

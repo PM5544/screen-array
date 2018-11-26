@@ -78,9 +78,9 @@ export default class Layer {
     this.clientPositionData = args;
   }
 
-  render(ctx, audioInfo) {
+  render(ctx, ts, audioInfo) {
     if (this.isEnabled && this.animation) {
-      this.animation.render(ctx, audioInfo);
+      this.animation.render(ctx, ts, audioInfo);
     }
   }
 }

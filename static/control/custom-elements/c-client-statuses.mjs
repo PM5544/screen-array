@@ -1,4 +1,5 @@
 import { control } from '../socket.mjs';
+import { CLIENT_COUNT } from '../../constants.mjs';
 
 const styleContent = `
 :host {
@@ -32,7 +33,13 @@ window.customElements.define(
       styles.textContent = styleContent;
       this.shadowRoot.appendChild(styles);
 
-      this.shadowRoot.addEventListener('click', ({ target }) => {
+      this.addEventListener('click', ({ target }) => {
+        control.emit('sendAllClientIds');
+      }, false);
+
+      this.shadowRoot.addEventListener('click', e => {
+        e.preventDefault();
+        const { target } = e;
         const { id } = target.dataset;
         if (id) {
           control.emit('identify', {
@@ -40,10 +47,8 @@ window.customElements.define(
             id,
             data: { id: id.replace('/clients#', '') }
           });
-        } else {
-          control.emit('sendAllClientIds');
         }
-      });
+      }, false);
 
       control.on('allClientIds', data => {
         Array.from(this.shadowRoot.querySelectorAll('div')).map(n => {

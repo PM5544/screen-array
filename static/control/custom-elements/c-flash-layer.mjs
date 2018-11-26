@@ -1,6 +1,5 @@
 import * as dom from '../dom.mjs';
 import * as events from '../events.mjs';
-import { sharedStyleContent } from './c-layer.mjs';
 
 const { content } = document.getElementById('flash-layer');
 
@@ -12,12 +11,6 @@ window.customElements.define(
       super();
 
       this.attachShadow({ mode: 'open' });
-      {
-        const styles = document.createElement('style');
-        styles.textContent = styleContent;
-        this.shadowRoot.appendChild(styles);
-      }
-
       this.shadowRoot.appendChild(content.cloneNode(true));
 
       this.formNode = this.shadowRoot.querySelector('form');
@@ -72,14 +65,3 @@ window.customElements.define(
     }
   }
 );
-
-
-var styleContent = `
-${sharedStyleContent}
-.properties {
-  padding-top: 1.74rem;
-}
-td:last-child {
-  width: 40px;
-}
-`;

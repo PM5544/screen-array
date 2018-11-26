@@ -1,7 +1,5 @@
 import * as animationUtils from '../utils/animation.mjs';
 
-const lineGapX = 750;
-
 export const name = 'landscape';
 export const tags = ['full side'];
 export const properties = ['color', 'lineWidth', 'opacity'];
@@ -17,6 +15,9 @@ export default class {
 
   constructor(...args) {
     animationUtils.extend.call(this, args);
+    this.sideWidth = this.clientCountOnSide * this.width;
+    this.focalPoint = Math.round(this.sideWidth / 2);
+    this.horizonY = Math.round(this.height * 0.5);
     this.reset();
   }
 
@@ -35,107 +36,65 @@ export default class {
   }
 
   render(ctx) {
-
-    const fullWidth = this.clientCountOnSide * this.width;
-
     let lineGapY = 2;
-    let lineY = Math.round(this.height * 0.5);
-    const horizonY = lineY;
+    let lineY = this.horizonY;
 
     if (this.clientCountOnSide) {
       ctx.translate(-(this.clientIndexOnSide * this.width), 0);
     }
 
-    ctx.beginPath();
-    animationUtils.set(ctx, 'lineWidth', this.lineWidth);
-
-    const focalPoint = Math.round(fullWidth / 2);
-
     let drawing = true;
     let xDif = 0;
     let yDif = 0;
 
-    animationUtils.set(ctx, 'strokeStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
+    animationUtils.set(
+      ctx,
+      'strokeStyle',
+      `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`
+    );
+    animationUtils.set(ctx, 'lineWidth', this.lineWidth);
 
     let x1;
     let x2;
     let y = this.height;
 
+    ctx.beginPath();
+
     while (drawing) {
-      ctx.beginPath();
-      x1 = focalPoint - xDif;
-      x2 = focalPoint + xDif;
+      x1 = this.focalPoint - xDif;
+      x2 = this.focalPoint + xDif;
       y = this.height - yDif;
 
-      if (xDif == focalPoint) {
+      if (xDif == this.focalPoint) {
         yDif += this.offset * 0.3;
-        if (yDif >= horizonY) {
+        if (yDif >= this.horizonY) {
           drawing = false;
         }
       } else {
         xDif += this.offset;
-        if (xDif > focalPoint) {
-          yDif += (xDif - focalPoint) * 0.5;
-          xDif = focalPoint;
+        if (xDif > this.focalPoint) {
+          yDif += (xDif - this.focalPoint) * 0.5;
+          xDif = this.focalPoint;
         }
       }
 
       ctx.moveTo(x1, y);
-      ctx.lineTo(focalPoint, horizonY);
+      ctx.lineTo(this.focalPoint, this.horizonY);
       ctx.lineTo(x2, y);
-      ctx.stroke();
     }
-
-    // ctx.moveTo(focalPoint, horizonY);
-    // ctx.beginPath();
-    // ctx.fillStyle = '#000000';
-    // ctx.lineWidth = 0;
-    // ctx.strokeStyle = '#000000';
-    // ctx.arc(focalPoint, horizonY, 5, 0, Math.PI);
-    // ctx.fill();
-
-    // ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-    // let horizontalColor = 0;
     while (lineY < this.height) {
-      // if (horizontalColor > 256) {
-      //   ctx.strokeStyle = 'rgb(256, 256, 256)';
-      // } else {
-      //   ctx.beginPath();
-      //   ctx.strokeStyle = `rgb(${horizontalColor}, ${horizontalColor}, ${horizontalColor})`;
-      //   horizontalColor += 60;
-      // }
       ctx.moveTo(0, lineY);
-      ctx.lineTo(fullWidth, lineY);
+      ctx.lineTo(this.sideWidth, lineY);
       lineY = Math.round(lineY + lineGapY);
       lineGapY = lineGapY * 1.25;
     }
 
     ctx.stroke();
-    // ctx.stroke();
 
-    // if (clientIsMirrored) {
-    //   this.x += this.offset;
-    //   if (this.x > lineGapX) {
-    //     this.x -= lineGapX;
-    //   }
-    // } else {
-    //   this.x -= this.offset;
-    //   if (this.x < -lineGapX) {
-    //     this.x += lineGapX;
-    //   }
-    // }
-
-    // ctx.beginPath();
-    // if (clientIsMirrored) {
-    //   ctx.moveTo(0, 0);
-    //   ctx.lineTo(this.clientCountOnSide * width, height);
-    // } else {
-    //   ctx.moveTo(this.clientCountOnSide * width, 0);
-    //   ctx.lineTo(0, height);
-    // }
-    // ctx.stroke();
+    // reset the translation on the ctx for the otehr layers
     if (this.clientCountOnSide) {
       ctx.translate(this.clientIndexOnSide * this.width, 0);
     }
+    return [0, this.horizonY, this.width, this.horizonY];
   }
 }

@@ -3,6 +3,7 @@ import * as registeredSockets from './registeredSockets';
 import server from './server';
 import sendToSockets from './sendToSockets';
 import getAllAnimationsPaths from './getAllAnimationsPaths';
+import { promisify } from 'util';
 // import './audio';
 
 IO.attach(server, {
@@ -10,6 +11,9 @@ IO.attach(server, {
 });
 
 controlServer.on('connection', function(co) {
+
+  registeredSockets.set('control', co.id);
+
   [
     'blackOutOff',
     'blackOutOn',
@@ -41,10 +45,6 @@ controlServer.on('connection', function(co) {
     co.emit('allAnimationPaths', await getAllAnimationsPaths());
   });
 
-  // co.on('setSocketNumber', function() {
-  //   registeredSockets.set('control', co.id);
-  // });
-
   co.on('sendAllClientIds', function() {
     // console.log('sendAllClientIds');
 
@@ -53,6 +53,8 @@ controlServer.on('connection', function(co) {
         (prev, cur) => Object.assign(prev, { [cur[0]]: cur[1] }),
         {}
       );
+
+      console.log(clientIds, registeredSockets.controlSocketId);
 
       co.emit('allClientIds', {
         clientIds,
@@ -83,14 +85,13 @@ controlServer.on('connection', function(co) {
 });
 
 clientsServer.on('connection', function(cl) {
-  cl.on('setSocketNumber', function(data) {
-    const { socketNumber } = data;
-    registeredSockets.set(socketNumber, cl.id);
+  cl.on('setClientPosition', function({ clientPosition }) {
+    registeredSockets.set(clientPosition, cl.id);
   });
-  cl.emit('getSocketNumber');
+  cl.emit('getClientPosition');
 });
 clientsServer.on('reconnect', function(cl) {
-  cl.emit('getSocketNumber');
+  cl.emit('getClientPosition');
 });
 
 server.listen(1337);

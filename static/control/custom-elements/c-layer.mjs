@@ -6,115 +6,6 @@ import './c-toggle-button.mjs';
 
 const { content } = document.getElementById('layer');
 
-export var sharedStyleContent = `
-form {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  height: 100%;
-}
-button{
-  -webkit-appearance: none;
-  background: var(--interactive-background-color);
-  color: var(--font-color);
-  border: 1px solid var(--border-color);
-  border-radius: 2px;
-  cursor: pointer;
-}
-button[disabled] {
-  color: grey;
-  cursor: default;
-}
-button + button {
-  margin-left: var(--padding);
-}
-input {
-  -webkit-appearance: none;
-  background-color: var(--interactive-background-color);
-  color: var(--font-color);
-  padding: 2px 0 2px var(--padding);
-  border: 1px solid var(--actionable-color);
-  border-width: 0 0 1px 0;
-  max-width: 40px;
-}
-input + button {
-  padding: 2px;
-  max-width: 15px;
-  margin-left: 4px;
-  color: var(--font-color-dark);
-}
-input[type='color'] {
-  padding: 0;
-  border-radius: 4px;
-  width: 100%;
-  height: 1.5rem;
-  max-width: none;
-}
-div ~ div {
-  padding-top: 0;
-}
-.is-disabled {
-  height: 0.2rem;
-  margin: var(--padding) var(--padding) 0;
-  background-color: var(--disabled-color);
-}
-.is-enabled {
-  background-color: var(--enabled-color);
-}
-.properties{
-  flex: 1;
-  margin: var(--padding) 0;
-}
-
-button {
-  flex: 1;
-}
-
-table {
-  width: 100%;
-}
-td:last-child{
-  width: 60px;
-}
-
-td,
-th {
-  text-align: left;
-  font-weight: normal;
-  white-space: nowrap;
-  font-size: var(--font-size);
-  color: var(--font-color);
-}
-th {
-  color: var(--font-color-dark);
-}
-.actions,
-.properties {
-  padding: var(--padding);
-}
-.actions {
-  display: flex;
-}
-.actions + .actions,
-.actions + .properties {
-  padding-top: 0;
-}`;
-
-var styleContent = `
-${sharedStyleContent}
-:host > div {
-  height: 100%;
-}
-.animation-name {
-  font-size: var(--font-size);
-  color: var(--font-color);
-  padding: var(--padding);
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
-`;
-
 window.customElements.define(
   'c-layer',
   class extends HTMLElement {
@@ -169,12 +60,6 @@ window.customElements.define(
       super();
 
       this.attachShadow({ mode: 'open' });
-      {
-        const styles = document.createElement('style');
-        styles.textContent = styleContent;
-        this.shadowRoot.appendChild(styles);
-      }
-
       this.shadowRoot.appendChild(content.cloneNode(true));
 
       this.nodes = new NodesProxy(this.shadowRoot);
@@ -188,7 +73,6 @@ window.customElements.define(
         this.storeProperties();
       };
       this.actions.toggleEnabled.setAttribute('disabled', '');
-
       this.actions.clear.addEventListener('click', this.clear.bind(this));
       this.actions.load.addEventListener('click', this.selectAnimation.bind(this));
 

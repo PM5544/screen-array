@@ -21,7 +21,6 @@ clients.on('refresh', function() {
   'enableAllLayers',
   'flashOn',
   'flashOff',
-
   'restartAnimation',
   'setClientPosition',
 ].forEach(type => {
@@ -44,30 +43,16 @@ clients.on('refresh', function() {
     layers[type](args);
   });
 });
-// clients.on(, args => {
-//   const {
-//     properties: { color }
-//   } = args;
-//   if (color) {
-//     const r = parseInt(color.substr(1, 2), 16);
-//     const g = parseInt(color.substr(3, 2), 16);
-//     const b = parseInt(color.substr(5, 2), 16);
-//     delete args.properties.color;
-//     Object.assign(args.properties, { r, g, b });
-//   }
-//   layers.setProperties(args);
-// });
 
-const socketNumber = localStorage.getItem('socketNumber');
-clients.on('getSocketNumber', () => {
-  clients.emit('setSocketNumber', { socketNumber });
+const clientPosition = localStorage.getItem('clientPosition');
+clients.on('getClientPosition', () => {
+  clients.emit('setClientPosition', { clientPosition });
 });
-clients.on('setSocketNumber', function(data) {
-  const { socketNumber } = data;
-  if (socketNumber) {
-    localStorage.setItem('socketNumber', data.socketNumber);
+clients.on('setClientPosition', function({ clientPosition }) {
+  if (clientPosition) {
+    localStorage.setItem('clientPosition', clientPosition);
   }
-  overlay(socketNumber);
+  overlay(clientPosition);
 });
 
 clients.on('identify', function(data) {

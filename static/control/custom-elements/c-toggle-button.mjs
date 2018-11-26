@@ -42,12 +42,12 @@ window.customElements.define(
 
       this._indicatorNode = document.createElement('span');
       this._indicatorNode.style.display = 'inline-block';
-      this._indicatorNode.style.width = '.4rem';
-      this._indicatorNode.style.height = '.4rem';
-      this._indicatorNode.style.marginLeft = '.2rem';
+      this._indicatorNode.style.width = '.5rem';
+      this._indicatorNode.style.height = '.5rem';
+      this._indicatorNode.style.marginLeft = '.3rem';
       this._indicatorNode.style.borderRadius = '2px';
       this._indicatorNode.style.border = '1px solid var(--border-color)';
-      // this._indicatorNode.style.backgroundColor = 'var(--disabled-color)';
+      this._indicatorNode.style.verticalAlign = 'middle';
       this.appendChild(this._indicatorNode);
 
       this._property = undefined;
@@ -85,7 +85,7 @@ window.customElements.define(
       }
     }
 
-    handleClick(e) {
+    handleEvent(e) {
       e.preventDefault();
       this.isOn = !this.isOn;
     }
@@ -112,7 +112,7 @@ window.customElements.define(
     }
 
     connectedCallback() {
-      this.addEventListener('click', this.handleClick);
+      this.addEventListener('click', this);
     }
     disconnectedCallback() {}
     adoptedCallback() {}

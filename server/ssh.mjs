@@ -52,4 +52,5 @@ export function restartAll() {
 }
 
 shutDownAll();
+// restartAll();
 
