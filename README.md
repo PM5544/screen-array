@@ -1,6 +1,6 @@
 # screen-array
 
-The goal of this project is to create a distributed audio responsive visual system with web technologies. Web Components, Canvas, future friendly JavaScript (ESM, ES8+), WebSockets etc. An array of Raspberry Pi’s is controlled by a central server sending them instructions over WebSockets. Each Pi runs a browser in kiosk mode (full screen and automatically started at boot) which loads a web page served from the central server.
+The goal of this project is to create a distributed audio responsive visual system with web technologies. Web Components, Canvas, future friendly JavaScript (ESM, ES8+), WebSockets, Web MIDI etc. An array of Raspberry Pi’s is controlled by a central server sending them instructions over WebSockets. Each Pi runs a browser in kiosk mode (full screen and automatically started at boot) which loads a web page served from the central server.
 The server also serves a web page to control the Pi's can be run on a laptop.
 Each client (a Raspberry Pi) is connected to one screen or projector, so the more clients the more screens you can control.
 My test setup has 12 screens but I’ve not tested how many clients can be steadily used on a 1GB network.
@@ -36,10 +36,11 @@ install dnsmasq on one Pi
 `$ sudo apt-get install dnsmasq`
 
 Set the dnsmasq config, in file: /etc/dnsmasq.conf
-
-```read-ethers
+```
+read-ethers
 interface=eth0
-dhcp-range=192.168.0.10,192.168.0.254,255.255.255.0,12h```
+dhcp-range=192.168.0.10,192.168.0.254,255.255.255.0,12h
+```
 
 
 Connect the devices to the network and check their MAC addresses in the leases file so they can be handed the same IP when reconnecting
@@ -69,18 +70,18 @@ Make some aliases to type less
 `$ sudo vi ~/.bash_aliases`
 
 copy these exact lines to the bash_aliases file
-
-```alias autostart='sudo vi ~/.config/lxsession/LXDE-pi/autostart'
+```
+alias autostart='sudo vi ~/.config/lxsession/LXDE-pi/autostart'
 alias lightdm='sudo vi /etc/lightdm/lightdm.conf'
 alias debug='ssh -L 0.0.0.0:9223:localhost:9222 localhost -N'
 alias ll='ls -Gal'
 alias kill='killall chromium-browser'
 alias sr='killall chromium-browser && sleep 2 && sudo reboot'
 alias sd='killall chromium-browser && sleep 2 && sudo shutdown now'
-alias test='chromium-browser --disable-restore-session-state --disable-extensions --disable-file-system --disable-notifications --disable-sync --disable-speech-api --enable-accelerated-2d-canvas --enable-experimental-web-platform-features --javascript-harmony --bwsi http://server:1337/client.html'```
+alias test='chromium-browser --disable-restore-session-state --disable-extensions --disable-file-system --disable-notifications --disable-sync --disable-speech-api --enable-accelerated-2d-canvas --enable-experimental-web-platform-features --javascript-harmony --bwsi http://server:1337/client.html'
+```
 
 Then source the bashrc to be able to use the aliases in your current terminal session
-
 `$ source ~/.bashrc`
 
 
@@ -93,10 +94,11 @@ goto line 127
 `:127`
 
 Add to SeatDefault section. Source link: http://chamaras.blogspot.com/2013/03/how-to-deactivate-monitor-sleep-in.html
-
-```[SeatDefaults]
+```
+[SeatDefaults]
 xserver-command=X -s 0 -dpms -nocursor
-#xserver-command=X -s 0 -dpms```
+#xserver-command=X -s 0 -dpms
+```
 
 The last line is there so you can easily switch to using a cursor when you need to use a mouse on the Pi by just uncommenting one line and commenting the other (# is used to comment out one line)
 Save and close the file
@@ -108,12 +110,13 @@ Or when you didn’t create the aliases
 `$ sudo vi ~/.config/lxsession/LXDE-pi/autostart`
 
 copy these exact lines to the autostart file
-
-```@chromium-browser --show-fps-counter --disable-restore-session-state --disable-file-system --disable-notifications --disable-speech-api --enable-accelerated-2d-canvas --enable-experimental-web-platform-features --enable-experimental-canvas-features --bwsi --kiosk --remote-debugging-port=9222 http://server:1337/client.html
+```
+@chromium-browser --show-fps-counter --disable-restore-session-state --disable-file-system --disable-notifications --disable-speech-api --enable-accelerated-2d-canvas --enable-experimental-web-platform-features --enable-experimental-canvas-features --bwsi --kiosk --remote-debugging-port=9222 http://server:1337/client.html
 
 @lxpanel --profile LXDE-pi
 #@pcmanfm --desktop --profile LXDE-pi
-@xscreensaver -no-splash```
+@xscreensaver -no-splash
+```
 
 Save and close the file
 
@@ -121,10 +124,12 @@ Set resolution
 `$ sudo vi /boot/config.txt`
 Go to line 21
 `:21`
-and change the width and height of the screen (this helps with performance)
+and change the width and height of the screen (this helps a lot with performance)
 
-```framebuffer_width=1024
-framebuffer_height=768```
+```
+framebuffer_width=800
+framebuffer_height=600
+```
 
 
 Reboot and check if Chromium starts and you don’t see a cursor
@@ -133,10 +138,12 @@ Reboot and check if Chromium starts and you don’t see a cursor
 
 Setting up the server
 Clone this repo 
-```$ git clone git@github.com:PM5544/screen-array.git
+```
+$ git clone git@github.com:PM5544/screen-array.git
 $ cd screen-array
 $ npm i
-$ npm start```
+$ npm start
+```
 Open a browser and go to http://localhost:1337/control.html to open the control page
 
 
