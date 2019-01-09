@@ -1,15 +1,24 @@
 import { spawn } from 'child_process';
-import sendToSockets from './sendToSockets';
+import sendToSockets from './sendToSockets.mjs';
+import analyse from './audioAnalyser.mjs';
+import beatsPerMinuteCalculator from './utils/beatsPerMinuteCalculator.mjs';
 
 const audio = spawn('ssh', ['pi@audio', 'projects/cava/cava']);
-const audioValuesCount = 24;
+const audioValuesCount = 30;
 const audioValuesCountPerSide = audioValuesCount / 2;
 const lineFeed = '\n';
 const int = v => parseInt(v, 10);
 
+
 function parse(value) {
   const levels = value.split(';').map(int);
   const right = levels.splice(audioValuesCountPerSide);
+  // const left = levels;
+  const left = levels.reverse();
+
+  const analised = analyse(left, right);
+  beatsPerMinuteCalculator(left, right);
+  // console.log(analised);
   // console.log('---');
   // console.log('L', levels.reverse());
   // console.log('R', right);
@@ -17,14 +26,16 @@ function parse(value) {
     targets: 'side',
     id: 'right',
     data: {
-      spectrum: right.reverse()
+      ...analised.right,
+      spectrum: right
     }
   });
   sendToSockets('audioSpectrumValues', {
     targets: 'side',
     id: 'left',
     data: {
-      spectrum: levels.reverse()
+      ...analised.left,
+      spectrum: left
     }
   });
 }

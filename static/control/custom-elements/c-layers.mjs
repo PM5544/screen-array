@@ -1,4 +1,5 @@
 import templateLoader from '../../utils/template-loader.mjs';
+import { NodesProxy } from '../dom.mjs';
 import './c-layer.mjs';
 import './c-flash-layer.mjs';
 import * as events from '../events.mjs';
@@ -26,6 +27,18 @@ templateLoader(name).then(content => {
         });
       }
 
+      get previewIsEnabled() {
+        return this._previewIsEnabled;
+      }
+      set previewIsEnabled(v = false) {
+        if (typeof v !== 'boolean') {
+          throw new Error(`usupported type ${typeof v}, expected boolean`);
+        }
+        this._previewIsEnabled = v;
+
+        console.log(this.previewIsEnabled);
+      }
+
       constructor() {
         super();
 
@@ -33,11 +46,12 @@ templateLoader(name).then(content => {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(content.cloneNode(true));
 
-        const b = document.createElement('button', { is: 'c-toggle-button' });
-        b.innerText = 'nieuwe button';
-        b.slot = 'buttons';
+        this.nodes = new NodesProxy(this.shadowRoot);
 
-        this.appendChild(b);
+        const b = document.createElement('button', { is: 'c-toggle-button' });
+        b.innerText = 'previews';
+        b.handler = bool => this.previewIsEnabled = bool;
+        this.nodes.buttons.appendChild(b);
 
         events.listen('toggleIsEnabled', ({ data: { index } }) => {
           this.layers[index].toggleIsEnabled();

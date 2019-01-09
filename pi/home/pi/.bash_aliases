@@ -1,0 +1,8 @@
+alias autostart='sudo vi ~/.config/lxsession/LXDE-pi/autostart'
+alias lightdm='sudo vi /etc/lightdm/lightdm.conf'
+alias debug='ssh -L 0.0.0.0:9223:localhost:9222 localhost -N'
+alias ll='ls -Gal'
+alias kill='killall chromium-browser'
+alias sr='killall chromium-browser && sleep 2 && sudo reboot'
+alias sd='killall chromium-browser && sleep 2 && sudo shutdown now'
+alias test='chromium-browser --disable-restore-session-state --disable-extensions --disable-file-system --disable-notifications --disable-sync --disable-speech-api --enable-accelerated-2d-canvas --enable-experimental-web-platform-features --javascript-harmony --bwsi http://server:1337/client.html'

@@ -1,0 +1,6 @@
+{
+  "kick": {
+    "type": "on-off",
+    "boundaries":[ 0, 3, 100, 80 ]
+  }
+}

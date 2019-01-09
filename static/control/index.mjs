@@ -1,9 +1,11 @@
+import './nav.mjs';
 import './custom-elements/c-layers.mjs';
 import './custom-elements/c-full-screen-toggle.mjs';
 import './custom-elements/c-beat-indicator.mjs';
 import './custom-elements/c-client-statuses.mjs';
 import './custom-elements/c-animations-explorer.mjs';
 import './custom-elements/c-client-management.mjs';
+import './custom-elements/c-audio-settings.mjs';
 import './custom-elements/c-tabs.mjs';
 import './midi.mjs';
 import * as events from './events.mjs';
@@ -23,9 +25,9 @@ document.querySelector('[data-action="setAllLayers"]').addEventListener('click',
   events.trigger('setAllClientLayersProperties');
 });
 
-document.documentElement.addEventListener('keydown', ({ which }) => {
-  switch (which) {
-    case 32:
-    events.trigger('beatSyncRestart');
-  }
-});
+// document.documentElement.addEventListener('keydown', ({ which }) => {
+//   switch (which) {
+//     case 32:
+//     events.trigger('beatSyncRestart');
+//   }
+// });

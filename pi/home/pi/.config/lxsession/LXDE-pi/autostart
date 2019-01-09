@@ -1,0 +1,5 @@
+@chromium-browser --show-fps-counter --disable-restore-session-state --disable-file-system --disable-notifications --disable-speech-api --enable-accelerated-2d-canvas --enable-experimental-web-platform-features --enable-experimental-canvas-features --bwsi --kiosk --remote-debugging-port=9222 http://server:1337/client.html
+
+@lxpanel --profile LXDE-pi
+#@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash

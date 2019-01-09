@@ -1,24 +1,42 @@
 import * as animationUtils from '../utils/animation.mjs';
-
+import { lifespan } from '../control/propertyTypes.mjs';
 const circleEnd = Math.PI * 2;
 
 export const name = 'swipe line';
 export const tags = ['trigger', 'full side'];
-export const properties = ['color', 'frameCount', 'lineWidth', 'opacity'];
+export const properties = ['color', 'lifespan', 'lineWidth'];
+
+class Arc {
+  constructor(timestamp, swipeLine) {
+    this.totalWidth = swipeLine.totalWidth;
+    this.clientIsMirrored = swipeLine.clientIsMirrored;
+    this.startTimestamp = timestamp;
+    this.lifespan = swipeLine.lifespan;
+    this.centerY = swipeLine.centerY;
+    this.endTimestamp = timestamp + swipeLine.lifespan;
+  }
+
+  render(ctx, timestamp) {
+    const radius = ((timestamp - this.startTimestamp) / this.lifespan) * this.totalWidth;
+    ctx.moveTo(this.clientIsMirrored ? this.totalWidth + radius : radius, this.centerY);
+    ctx.arc(this.clientIsMirrored ? this.totalWidth : 0, this.centerY, radius, 0, circleEnd);
+  }
+}
 
 export default class {
   set primary(val) {
-    this.frameCount = 10 + Math.round(val * 50);
+    this.lifespan = val * lifespan.max;
+    console.log(this.lifespan);
   }
 
   get primary() {
-    return this.frameCount;
+    return this.lifespan;
   }
 
   constructor(...args) {
     animationUtils.extend.call(this, args);
     this.reset();
-    this.frame = this.stopFrame;
+    this.totalWidth = this.clientCountOnSide * this.width;
   }
 
   reset() {
@@ -26,41 +44,39 @@ export default class {
     this.r = 256;
     this.g = 256;
     this.b = 256;
-    this.opacity = 1;
-
-    this.frameCount = 200;
-    this.stopFrame = 230;
+    this.lifespan = 2000;
+    this.arcs = [];
   }
 
   restart() {
-    this.frame = 0;
+    this.addOne = true;
   }
 
-  render(ctx) {
-    if (this.frame === this.stopFrame) {
-      return;
-    } else if (this.frame < this.frameCount) {
+  render(ctx, timestamp) {
+    if (this.addOne) {
+      this.arcs.unshift(new Arc(timestamp, this));
+      this.addOne = false;
+    }
 
-      animationUtils.set(ctx, 'strokeStyle', `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`);
+    if (this.arcs.length) {
+      animationUtils.set(ctx, 'strokeStyle', `rgba(${this.r}, ${this.g}, ${this.b}, 1)`);
       animationUtils.set(ctx, 'lineWidth', this.lineWidth);
 
       ctx.translate(-(this.clientIndexOnSide * this.width), 0);
 
       ctx.beginPath();
-      ctx.arc(
-        this.clientIsMirrored ? this.clientCountOnSide * this.width : 0,
-        this.centerY,
-        this.frame / this.frameCount * (this.clientCountOnSide * this.width),
-        0,
-        circleEnd
-      );
+      const len = this.arcs.length;
+      for (let i = 0; i < len; i++) {
+        if (this.arcs[i].endTimestamp > timestamp) {
+          this.arcs[i].render(ctx, timestamp);
+        } else {
+          this.arcs.slice(i);
+          break;
+        }
+      }
       ctx.stroke();
 
       ctx.translate(this.clientIndexOnSide * this.width, 0);
-
-      this.frame++;
-    } else {
-      this.frame = this.stopFrame;
     }
   }
 }

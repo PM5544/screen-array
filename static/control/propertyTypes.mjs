@@ -68,5 +68,16 @@ export const radius = {
   step: 1
 };
 
+export const rpm = {
+  defaultValue: 130,
+  min: 1,
+  max: 1000,
+  step: 0.5
+};
 
-
+export const lifespan = {
+  defaultValue: 2000,
+  min: 0,
+  max: 4000,
+  step: 1
+};

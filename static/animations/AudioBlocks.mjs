@@ -28,6 +28,7 @@ export default class {
   restart() {}
 
   render(ctx, timestamp, {spectrum = false}) {
+
     if (!spectrum) {
       return;
     }

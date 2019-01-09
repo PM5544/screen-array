@@ -27,7 +27,7 @@
     <canvas width="800" height="600"></canvas>
   </body>
   <script type="module">
-    import Animation from './animations/Landscape.mjs';
+    import Animation from './animations/SwipeLine.mjs';
     const canvas = document.querySelector('canvas');
     const WIDTH = canvas.width;
     const HEIGHT = canvas.height;
@@ -42,6 +42,8 @@
     const iterations = 10;
     let iterationCounter = iterations;
     let newLevels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+    const { requestAnimationFrame }  = window;
 
     function makeNewAudioLevels() {
       oldLevels = [].concat(newLevels);
@@ -88,33 +90,22 @@
     }
 
     const animation = new Animation(
-      { clientIndexOnSide: 0, clientCountOnSide: 1, clientIsMirrored: false },
-      dimensions,
-      {
-        timestamp: new Date().getTime()
-      }
+      { clientIndexOnSide: 1, clientCountOnSide: 2, clientIsMirrored: false },
+      dimensions
     );
 
     if ('restart' in animation) {
       animation.restart();
     }
+
     makeNewAudioLevels();
 
-    const clearAreas = [];
     function drawFrame(ts) {
-      clearAreas.forEach(([x, y, w, h]) => {
-        // ctx.clearRect(x, y, w, h);
-        ctx.fillStyle = 'black';
-        ctx.fillRect(x, y, w, h);
-      });
-      clearAreas.length = 0;
-
-      clearAreas.push(animation.render(ctx, ts, getAudioLevels()));
-      // ctx.clearRect(0, 0, WIDTH, HEIGHT);
-      // animation.render(ctx, ts, getAudioLevels());
-      window.requestAnimationFrame(drawFrame);
+      requestAnimationFrame(drawFrame);
+      ctx.clearRect(0, 0, WIDTH, HEIGHT);
+      animation.render(ctx, ts, getAudioLevels());
     }
 
-    window.requestAnimationFrame(drawFrame);
+    requestAnimationFrame(drawFrame);
   </script>
 </html>

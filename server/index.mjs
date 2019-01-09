@@ -1,17 +1,16 @@
 import { IO, controlServer, clientsServer } from './io';
-import * as registeredSockets from './registeredSockets';
-import server from './server';
-import sendToSockets from './sendToSockets';
-import getAllAnimationsPaths from './getAllAnimationsPaths';
-import { promisify } from 'util';
-// import './audio';
+import * as registeredSockets from './registeredSockets.mjs';
+import * as storage from './storage.mjs';
+import server from './server.mjs';
+import sendToSockets from './sendToSockets.mjs';
+import getAllAnimationsPaths from './getAllAnimationsPaths.mjs';
+import './audio';
 
 IO.attach(server, {
   transports: ['websocket']
 });
 
 controlServer.on('connection', function(co) {
-
   registeredSockets.set('control', co.id);
 
   [
@@ -27,12 +26,23 @@ controlServer.on('connection', function(co) {
     'identify',
     'loadAnimation',
     'restartAnimation',
-    'setLayerProperties'
+    'setLayerProperties',
+    'setClientPosition'
   ].forEach(type => {
     co.on(type, function(instructions) {
       // console.log(type, instructions);
       sendToSockets(type, instructions);
     });
+  });
+
+  co.on('retrieve', async function(path) {
+    // console.log('retrieving:', path);
+    co.emit('retrieved', await storage.retrieve(path));
+  });
+
+  co.on('persist', async function(ob) {
+    // console.log('persisting', ob.data, 'to', ob.path);
+    co.emit('persisted', await storage.persist(ob));
   });
 
   co.on('refresh', function(instructions) {
@@ -65,7 +75,7 @@ controlServer.on('connection', function(co) {
 
       registeredSockets.socketsLeftValues.forEach((socketId, index, ar) => {
         // console.log(socketId, index, ar.length, true );
-        sendToSockets('setClientPosition', {
+        sendToSockets('setClientPositionProperties', {
           targets: 'byId',
           id: socketId,
           data: { clientIndexOnSide: index, clientCountOnSide: ar.length, clientIsMirrored: true }
@@ -73,7 +83,7 @@ controlServer.on('connection', function(co) {
       });
       registeredSockets.socketsRightValues.forEach((socketId, index, ar) => {
         // console.log(socketId, index, ar.length, false );
-        sendToSockets('setClientPosition', {
+        sendToSockets('setClientPositionProperties', {
           targets: 'byId',
           id: socketId,
           data: { clientIndexOnSide: index, clientCountOnSide: ar.length, clientIsMirrored: false }
@@ -86,6 +96,7 @@ controlServer.on('connection', function(co) {
 
 clientsServer.on('connection', function(cl) {
   cl.on('setClientPosition', function({ clientPosition }) {
+    console.log(clientPosition, cl.id);
     registeredSockets.set(clientPosition, cl.id);
   });
   cl.emit('getClientPosition');

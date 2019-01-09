@@ -1,4 +1,5 @@
 const eventsMap = new Map();
+const target = {};
 
 export function trigger(type, data) {
   // console.log('triggered', eventsMap.has(type), type, data);
@@ -20,3 +21,14 @@ export function listen(type, fn) {
     eventsMap.set(type, eventsMap.get(type).filter(v => v !== fn));
   };
 }
+
+// document.addEventListener('click', e => {
+//   const { currentTarget, target } = e;
+//   console.log(true, currentTarget, target);
+// }, true);
+
+document.documentElement.addEventListener('clickedAnimationPreview', ({ detail }) => {
+  document.documentElement.dispatchEvent(new CustomEvent('selectedAnimationToLoad', { detail }));
+});
+
+export default target;

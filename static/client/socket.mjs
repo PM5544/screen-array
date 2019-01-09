@@ -22,7 +22,7 @@ clients.on('refresh', function() {
   'flashOn',
   'flashOff',
   'restartAnimation',
-  'setClientPosition',
+  'setClientPositionProperties',
 ].forEach(type => {
   clients.on(type, args => {
     layers[type](args);

@@ -1,5 +1,9 @@
 <link rel="stylesheet" href="shadow-dom.css">
 <style>
+:host {
+  --tab-padding: .5rem;
+}
+
 .tab-buttons {
   display: flex;
   border-bottom: 1px solid var(--border-color);
@@ -11,6 +15,7 @@
 }
 button {
   border-bottom-width: 0;
+  padding: calc(var(--tab-padding) / 2) var(--tab-padding);
 }
 button + button {
   margin: 0;

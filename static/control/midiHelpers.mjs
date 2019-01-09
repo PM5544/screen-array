@@ -20,7 +20,7 @@ import {
   LIGHT_YELLOW_BLINK
 } from '../constants.mjs';
 
-const layers = document.querySelector('c-layers').layers;
+const layersNode = document.querySelector('c-layers');
 
 export function handleMidiInputMessage({ data: [ctrl, key, value] }) {
   // console.log(ctrl, key, value);
@@ -51,7 +51,7 @@ function restoreMidiLayerIndicators(index, port) {
       }
       counter -= 8;
     }
-  } else if (layers[index].isEnabled) {
+  } else if (layersNode.layers[index].isEnabled) {
     let counter = index;
     while (counter < 64) {
       if (hasKeyMapping(counter)) {
@@ -75,7 +75,7 @@ export function addOutputEvents(port) {
 
   return [
     events.listen('restoreMidi', function restoreMidi() {
-      layers.forEach((layer, index) => {
+      layersNode.layers.forEach((layer, index) => {
         if (layer.moduleSpecifier) {
           port.send([NOTE_ON, 64 + index, LIGHT_GREEN]);
           restoreMidiLayerIndicators(index, port);
@@ -93,17 +93,17 @@ export function addOutputEvents(port) {
       });
     }),
     events.listen('enableMidiLayerToggle', function enableMidiLayerToggle({ data: { index } }) {
-      if (layers[index].moduleSpecifier) {
+      if (layersNode.layers[index].moduleSpecifier) {
         port.send([NOTE_ON, 64 + index, LIGHT_GREEN]);
       }
     }),
     events.listen('disableMidiLayerToggle', function disableMidiLayerToggle({ data: { index } }) {
-      if (layers[index].moduleSpecifier) {
+      if (layersNode.layers[index].moduleSpecifier) {
         port.send([NOTE_ON, 64 + index, LIGHT_OFF]);
       }
     }),
     events.listen('enableLayer', function enableLayerByMidi({ data: { index } }) {
-      if (layers[index].moduleSpecifier) {
+      if (layersNode.layers[index].moduleSpecifier) {
         let counter = 56;
         while (counter >= 0) {
           if (hasKeyMapping(counter)) {
@@ -114,7 +114,7 @@ export function addOutputEvents(port) {
       }
     }),
     events.listen('disableLayer', function disableLayerByMidi({ data: { index } }) {
-      if (layers[index].moduleSpecifier) {
+      if (layersNode.layers[index].moduleSpecifier) {
         let counter = 56;
         while (counter >= 0) {
           port.send([NOTE_ON, counter + index, LIGHT_OFF]);
@@ -126,7 +126,7 @@ export function addOutputEvents(port) {
       port.send([NOTE_ON, 0 + index, LIGHT_YELLOW_BLINK]);
     }),
     events.listen('unfocusLayer', function unhighlighFocussedLayer({ index }) {
-      const layer = layers[index];
+      const layer = layersNode.layers[index];
       if (layer.isEnabled) {
         if (hasKeyMapping(0 + index)) {
           port.send([NOTE_ON, 0 + index, LIGHT_GREEN]);
@@ -137,13 +137,13 @@ export function addOutputEvents(port) {
         port.send([NOTE_ON, 0 + index, LIGHT_OFF]);
       }
     }),
-    events.listen('selectedAnimationToLoad', function highlightLoadButtons() {
+    document.documentElement.addEventListener('selectedAnimationToLoad', function highlightLoadButtons() {
       let counter = 7;
       while (counter--) {
         port.send([NOTE_ON, counter, LIGHT_YELLOW_BLINK]);
       }
     }),
-    events.listen('loadedAnimationIntoLayer', function restoreAllLayersMidiIndicators() {
+    document.documentElement.addEventListener('loadedAnimationIntoLayer', function restoreAllLayersMidiIndicators() {
       let counter = 7;
       while (counter--) {
         restoreMidiLayerIndicators(counter, port);

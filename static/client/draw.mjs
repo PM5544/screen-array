@@ -1,21 +1,22 @@
 import { layers, flashLayer } from './layers.mjs';
 import { clear, ctx } from './canvas.mjs';
 
-const initialisationTimestamp = Date.now();
+const { requestAnimationFrame } = window;
+
 let drawing = true;
-const audioLevels = {
+let audioLevels = {
   spectrum: []
 };
 
-export function setAudioLevels({spectrum}) {
-  audioLevels.spectrum = spectrum;
+export function setAudioLevels(data) {
+  audioLevels = data;
 }
 
-let lastTimestamp = Date.now();
+// let lastTimestamp = Date.now();
 
 function drawFrame(ts) {
   clear();
-  const frameTime = ts - lastTimestamp;
+  // const frameTime = ts - lastTimestamp;
 
   if (drawing) {
     layers.forEach(l => {
@@ -24,15 +25,15 @@ function drawFrame(ts) {
 
     flashLayer.render(ctx);
 
-    window.requestAnimationFrame(drawFrame);
+    requestAnimationFrame(drawFrame);
 
-    lastTimestamp = ts;
+    // lastTimestamp = ts;
   }
 }
 
 export function start() {
   drawing = true;
-  window.requestAnimationFrame(drawFrame);
+  requestAnimationFrame(drawFrame);
 }
 
 export function stop() {

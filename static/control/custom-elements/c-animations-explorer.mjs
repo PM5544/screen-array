@@ -125,6 +125,9 @@ templateLoader(name).then(content => {
       handleAnimationsClick({ target }) {
         const animation = this.animationsMap.get(target);
         if (animation) {
+          this.dispatchEvent(
+            new CustomEvent('clickedAnimationPreview', { bubbles: true, detail: { animation } })
+          );
           events.trigger('selectedAnimationToLoad', animation);
         }
       }

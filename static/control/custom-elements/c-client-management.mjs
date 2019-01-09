@@ -41,7 +41,6 @@ templateLoader(name).then(content => {
             {
               const { value } = target;
               const { id } = target.dataset;
-              console.log(value, id);
               if (typeof value !== 'undefined' && value !== '') {
                 control.emit('setClientPosition', {
                   id,

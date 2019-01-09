@@ -25,10 +25,10 @@ export function flashOff() {
 }
 
 export function disableLayer({ index }) {
-  layers[index].disable();
+  layers[index] && layers[index].disable();
 }
 export function enableLayer({ index }) {
-  layers[index].enable();
+  layers[index] && layers[index].enable();
 }
 
 export function disableAllLayers() {
@@ -66,9 +66,9 @@ export function loadAnimation(args) {
   layers[index].load(args);
 }
 
-export function setClientPosition(args) {
+export function setClientPositionProperties(args) {
   layers.forEach(l => {
-    l.setClientPosition(args);
+    l.setClientPositionProperties(args);
   });
 }
 

@@ -19,8 +19,7 @@ control.on('clientError', data => {
   'flashOn',
   'loadAnimation',
   'restartAnimation',
-  'setLayerProperties',
-  'setClientPosition'
+  'setLayerProperties'
 ].forEach(type => {
   events.listen(type, function(payload) {
     control.emit(type, payload);

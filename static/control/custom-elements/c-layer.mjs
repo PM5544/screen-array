@@ -103,12 +103,12 @@ templateLoader(name).then(content => {
           });
         });
 
-        events.listen('selectedAnimationToLoad', data => {
-          this._selectedAnimationToLoad = data;
+        document.documentElement.addEventListener('selectedAnimationToLoad', ({ detail }) => {
+          this._selectedAnimationToLoad = detail.animation;
           this.actions.load.removeAttribute('disabled');
         });
 
-        events.listen('loadedAnimationIntoLayer', () => {
+        document.documentElement.addEventListener('loadedAnimationIntoLayer', () => {
           delete this._selectedAnimationToLoad;
           this.actions.load.setAttribute('disabled', '');
         });
@@ -123,7 +123,7 @@ templateLoader(name).then(content => {
         this.moduleSpecifier = specifier;
 
         this.nodes.form.dispatchEvent(new Event('submit'));
-        events.trigger('loadedAnimationIntoLayer');
+        this.dispatchEvent(new CustomEvent('loadedAnimationIntoLayer', { bubbles: true, cancelable: false }));
       }
 
       clear() {
@@ -256,6 +256,10 @@ templateLoader(name).then(content => {
           this.nodes.propertiesBody.append(tr);
         } else {
           const t = propertyTypes[v];
+
+          if (!t) {
+            throw new Error(`properType ${v} not set.`);
+          }
           const tr = document.createElement('tr');
 
           const td1 = document.createElement('td');

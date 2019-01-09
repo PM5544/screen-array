@@ -1,16 +1,18 @@
 import * as animationUtils from '../utils/animation.mjs';
+import { minute } from '../utils/time.mjs';
+import { rpm } from '../control/propertyTypes.mjs';
 
 export const name = 'spining line';
 export const tags = ['trigger'];
-export const properties = ['color', 'radius', 'lineWidth', 'opacity', 'velocity'];
+export const properties = ['color', 'radius', 'lineWidth', 'opacity', 'rpm'];
 
 export default class {
   set primary(val) {
-    this.opacity = val;
+    this.rpm = val;
   }
 
   get primary() {
-    return this.opacity;
+    return this.rpm;
   }
 
   constructor(...args) {
@@ -25,15 +27,16 @@ export default class {
     this.r = 256;
     this.g = 256;
     this.b = 256;
-    this.opacity = 0.5;
-    this.velocity = 0.1;
+    this.opacity = 1;
+    this.rpm = rpm.defaultValue;
   }
 
   restart() {
     this.radian = 0;
   }
 
-  render(ctx) {
+  render(ctx, timestamp) {
+    this.radian = ((timestamp / minute) * (Math.PI * 2)) * this.rpm;
 
     ctx.strokeStyle = `rgba(${this.r},${this.g},${this.b},${this.opacity}`;
     animationUtils.set(ctx, 'lineWidth', this.lineWidth);
@@ -48,10 +51,5 @@ export default class {
       this.centerY + Math.sin(this.radian) * this.radius
     );
     ctx.stroke();
-
-    this.radian += this.velocity;
-    if (this.radian >= 1000) {
-      this.radian -= 1000;
-    }
   }
 }
